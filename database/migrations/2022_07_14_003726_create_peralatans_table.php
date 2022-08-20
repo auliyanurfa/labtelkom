@@ -20,7 +20,7 @@ return new class extends Migration
             $table->foreignId('jenis_id');
             $table->text('merk');
             $table->text('tipe');
-            $table->text('spesifikasi')->default(0);
+            $table->text('spesifikasi')->nullable();
             $table->year('tahun_masuk');
             $table->integer('jumlah_alat')->default(1);
             $table->enum('kondisi', ['Baik', 'Rusak','Dalam Perbaikan']);
