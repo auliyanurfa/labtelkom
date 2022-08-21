@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Mahasiswa extends Model
 {
+    use HasFactory;
     protected $guarded = ['id'];
     protected $table = 'mahasiswas';
     protected $primaryKey = 'id_mahasiswa';
@@ -13,7 +14,7 @@ class Mahasiswa extends Model
         $query->when($filters['search'] ?? false, function($query, $search){
             return $query->where('nama_mahasiswa', 'like', '%' . $search . '%')
             ->orWhere('id_mahasiswa', 'like', '%' . $search . '%');
-        
+
         });
     }
 

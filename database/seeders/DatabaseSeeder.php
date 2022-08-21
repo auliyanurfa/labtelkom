@@ -41,14 +41,14 @@ class DatabaseSeeder extends Seeder
             'gender' => 'L',
             'address' => 'Politeknik Negeri Semarang'
         ]);
-        
+
         Role::create([
             'role_name' => 'Admin'
         ]);
         Role::create([
             'role_name' => 'Ketua Prodi'
         ]);
-        
+
         Role::create([
             'role_name' => 'Ketua Lab'
         ]);
@@ -62,5 +62,10 @@ class DatabaseSeeder extends Seeder
         ]);
 
         Material::factory(20)->create();
+
+        $this->call(MahasiswaSeeder::class);
+        $this->call(JenisSeeder::class);
+        $this->call(LokasiSeeder::class);
+        $this->call(PeralatanSeeder::class);
     }
 }
