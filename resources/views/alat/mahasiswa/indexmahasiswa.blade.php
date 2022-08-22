@@ -74,13 +74,13 @@
                                 <td>{{ $siswa->nama_mahasiswa }}</td>
                                 <td>{{ $siswa->no_hp_mahasiswa }}</td>
                                 <td>
-                                    <button><a href="{{ url('alat/pendataanmahasiswa/' . $siswa->id_mahasiswa) }}"
+                                    <a href="{{ url('alat/pendataanmahasiswa/' . $siswa->id_mahasiswa) }}"
                                             title="Lihat Data Mahasiswa"><span data-feather="eye"><i class="fa fa-eye"
-                                                    aria-hidden="true"></i></span></a></button>
-                                    <button><a href="{{ url('alat/pendataanmahasiswa/' . $siswa->id_mahasiswa . '/edit') }}"
+                                                    aria-hidden="true"></i></span></a>
+                                    <a href="{{ url('alat/pendataanmahasiswa/' . $siswa->id_mahasiswa . '/edit') }}"
                                             title="Ubah Data Mahasiswa"><span data-feather="edit"><i
                                                     class="fa fa-pencil-square-o"
-                                                    aria-hidden="true"></i></span></a></button>
+                                                    aria-hidden="true"></i></span></a>
 
                                     <form method="POST"
                                         action="{{ url('alat/pendataanmahasiswa' . '/' . $siswa->id_mahasiswa) }}"
