@@ -20,6 +20,7 @@ class Mahasiswa extends Model
 
     public function aktivitas()
     {
-    	return $this->hasMany(Aktivitas::class);
+    	return $this->hasMany(Aktivitas::class, 'mahasiswa_id', 'id');
     }
+
 }

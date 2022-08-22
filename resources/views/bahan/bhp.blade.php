@@ -16,7 +16,7 @@
           <a href="javascript:void(0)" class="btn btn-outline-primary mb-2" id="createBHP">Tambah BHP</a>
         </div>
         <div class="col-sm-2">
-          <a href="javascript:void(0)" class="btn btn-outline-primary" id="createUnit">  
+          <a href="javascript:void(0)" class="btn btn-outline-primary" id="createUnit">
                   Tambah Jenis
           </a>
         </div>
@@ -72,11 +72,11 @@
                     <div class="col-md-6">
                       <label for="name_material" class="form-label">Nama BHP</label>
                       <input type="text" class="form-control form-control-sm mb-2 @error('name_material') is-invalid @enderror" id="name_material" name="name_material" placeholder="Nama Bahan Habis Pakai" required value="{{ old('name_material') }}">
-                      
+
                       <label for="barcode" class="form-label">Barcode</label>
                       <input type="text" class="form-control mb-2" id="barcode" name="barcode" placeholder="Barcode" required value="{{ old('barcode') }}">
                       <svg id="code39"></svg>
-  
+
                       <label for="spesifikasi" class="form-label">Spesifikasi</label>
                       <input type="text" class="form-control mb-2 @error('spesifikasi') is-invalid @enderror" id="spesifikasi" name="spesifikasi" placeholder="Spesifikasi" required value="{{ old('spesifikasi') }}">
                       @error('spesifikasi')
@@ -84,7 +84,7 @@
                               {{ $message }}
                       </div>
                       @enderror
-                      
+
                       <label for="Type" class="form-label">Tipe</label>
                       <input type="text" class="form-control mb-2 @error('type') is-invalid @enderror" id="type" name="type" placeholder="Type"  required value="{{ old('type') }}">
                       @error('type')
@@ -100,7 +100,7 @@
                       <option value="{{ $unit->id }}">{{ $unit->name_unit }}</option>
                       @endforeach
                       </select>
-  
+
                       <label for="stok" class="form-label">Stok</label>
                       <input type="text" class="form-control mb-2 @error('stok') is-invalid @enderror" id="stok" name="stok" placeholder="Stok"  required readonly='true' value="{{ old('stok') }}">
                           @error('stok')
@@ -130,7 +130,7 @@
                   </div>
 
                 </div>
-              </form> 
+              </form>
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -140,7 +140,7 @@
           </div>
         </div>
       </div>
-      <div class="container"> 
+      <div class="container">
           <div class="col-12 table-responsive mt-1">
             <table class="table table-bordered table-striped" id="bhp" width="100%">
               <thead>
@@ -157,26 +157,8 @@
     </main>
   </div>
 </div>
-<script type="text/javascript" language="javascript" src="https://code.jquery.com/jquery-3.5.1.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js" integrity="sha512-uto9mlQzrs59VwILcLiRYeLKPPbS/bT71da/OEBYEwcdNUk8jYIy+D176RYoop1Da+f9mvkYrmj5MCLZWEtQuA==" crossorigin="anonymous"referrerpolicy="no-referrer"></script>
-<script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
-<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
-<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/1.12.1/js/dataTables.bootstrap5.min.js"></script>
-
-<!-- SweetAlert2 -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/10.5.1/sweetalert2.min.css">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/10.5.1/sweetalert2.all.min.js"></script>
-
- {{-- button --}}
- <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/1.7.1/css/buttons.dataTables.min.css">
- <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.7.1/js/dataTables.buttons.min.js"></script>
- <script src="https://cdn.datatables.net/buttons/1.5.2/js/buttons.flash.min.js"></script>
- <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
- <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"></script>
- <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script>
- <script src="https://cdn.datatables.net/buttons/1.5.2/js/buttons.html5.min.js   "></script>
- <script src="https://cdn.datatables.net/buttons/1.2.2/js/buttons.print.min.js"></script>
-
+@endsection
+@section('footer')
 <script type="text/javascript">
     $(document).ready( function () {
       $.ajaxSetup({
@@ -216,7 +198,7 @@
       $("#saveBtn").click(function(e){
         e.preventDefault();
         $(this).html('Input');
-        
+
         $.ajax({
           data:$("#bhpForm").serialize(),
           url: "{{ route('dataBHP.store') }}",
@@ -250,7 +232,7 @@
       $("#updateBtn").click(function(e){
         e.preventDefault();
         $(this).html('Update');
-        var id = $("#id").val();  
+        var id = $("#id").val();
         var data = $("#bhpForm").serialize();
         $.ajax({
           data : data,
@@ -293,7 +275,7 @@
           url: "{{ route('unit.store') }}",
           type: "POST",
           dataType: 'json',
-          
+
           success:function(data){
             $('#unitForm').trigger("reset");
             $('#ModalUnit').modal('hide')
@@ -307,7 +289,7 @@
             }
         });
       });
-    
+
       function printErrorMsg (msg) {
             $(".print-error-msg").find("ul").html('');
             $(".print-error-msg").css('display','block');
@@ -378,8 +360,7 @@
         })
       });
     });
-  
+
  </script>
 @endsection
 
-    

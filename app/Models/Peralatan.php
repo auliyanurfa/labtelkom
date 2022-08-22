@@ -12,6 +12,11 @@ class Peralatan extends Model
     protected $guarded = ['id'];
     protected $table = 'peralatans';
 
+    public function aktivitas()
+    {
+        return $this->hasMany(Aktivitas::class, 'peralatan_id', 'id');
+    }
+
     public function jenis()
     {
         return $this->belongsTo(Jenis::class);
@@ -20,6 +25,6 @@ class Peralatan extends Model
     public function lokasi()
     {
     	return $this->belongsTo(Lokasi::class);
-    } 
+    }
 
 }

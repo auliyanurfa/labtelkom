@@ -6,7 +6,9 @@ use App\Models\Peralatan;
 use App\Models\Mahasiswa;
 use App\Models\Aktivitas;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Throwable;
 
 class AktivitasController extends Controller
 {
@@ -18,16 +20,19 @@ class AktivitasController extends Controller
     public function index()
     {
         $aktivitass = Aktivitas::with('peralatan', 'mahasiswa');
-        
+
         if(request()->ajax()){
             return datatables()->of($aktivitass)
             ->editColumn('tgl_pinjam', function($request){
-                $formatDate = Carbon::parse($request->created_at)->toDateTimeString();
+                $formatDate = $request->tgl_pinjam ? Carbon::parse($request->tgl_pinjam)->toDateTimeString() : '';
                 return $formatDate;
             })
             ->editColumn('tgl_kembali', function($request){
-                $formatDate = Carbon::parse($request->updated_at)->toDateTimeString();
+                $formatDate = $request->tgl_kembali ? Carbon::parse($request->tgl_kembali)->toDateTimeString() : '-';
                 return $formatDate;
+            })
+            ->editColumn('status', function($request){
+                return Str::upper($request->status);
             })
             ->addColumn('action', function($row){
                 // $btn .= '<a href="javascript:void(0)" data-id="'.$row->id.'"class="update m-1"><i class="fa-solid fa-trash-can"></i></a>';
@@ -72,16 +77,25 @@ class AktivitasController extends Controller
      */
     public function store(Request $request)
     {
-        $peralatan = Peralatan::where('barcode', $request->barcode)->update([ 
-            'jml_alat' => $request->jml_alat -1,
+        $request->validate([
+            'barcode' => 'required',
+            'nama_alat' => 'required',
+            'id_mahasiswa' => 'required',
+            'nama_mahasiswa' => 'required'
         ]);
-        
-        $aktivitass = Aktivitas::create([                
-                'barcode' => $request->barcode,
-                'nama_alat' => $request->nama_alat,
-                'id_mahasiswa' => $request->id_mahasiswa,
-                'nama_mahasiswa' => $request->nama_mahasiswa,
-            ]);
+
+        $mahasiswa = Mahasiswa::where('id_mahasiswa', $request->id_mahasiswa)->first();
+
+        $peralatanRaw = Peralatan::where('barcode', $request->barcode);
+        $singlePeralatan = $peralatanRaw->first();
+        $peralatan = $peralatanRaw->decrement('jumlah_alat', 1);
+
+        $aktivitass = Aktivitas::create([
+            'peralatan_id' => $singlePeralatan->id,
+            'mahasiswa_id' => $mahasiswa->id,
+            'tgl_pinjam' => date('Y-m-d H:i:s'),
+            'status' => 'pinjam'
+        ]);
 
         if($aktivitass !==0 && $peralatan !==0){
             $success = true;
@@ -143,7 +157,7 @@ class AktivitasController extends Controller
                 'status' => 'kembali'
                 ]);
 
-        $peralatan = Peralatan::where('barcode', $request->barcode)->update([ 
+        $peralatan = Peralatan::where('barcode', $request->barcode)->update([
             'jml_alat' => $request->jml_alat -1,
         ]);
 
@@ -160,5 +174,37 @@ class AktivitasController extends Controller
     {
         Aktivitas::find($id)->delete();
         return redirect()->route('peminjamandanpengembalian.destroy');
+    }
+
+    public function searchAlat(Request $request)
+    {
+        if($request->ajax()){
+            try{
+                $alat = Peralatan::whereBarcode($request->barcode)->first();
+                if($alat == null){
+                    throw 'Not Match';
+                }
+                return response()->json(['success' => true, 'msg' => $alat]);
+            } catch (\Throwable $e)
+            {
+                return response()->json(['success' => false, 'msg' => 'Not Match']);
+            }
+        }
+    }
+
+    public function searchMahasiswa(Request $request)
+    {
+        if($request->ajax()){
+            try{
+                $mahasiswa = Mahasiswa::whereIdMahasiswa($request->id)->first();
+                if($mahasiswa == null){
+                    throw 'Not Match';
+                }
+                return response()->json(['success' => true, 'msg' => $mahasiswa]);
+            } catch (\Throwable $e)
+            {
+                return response()->json(['success' => false, 'msg' => 'Not Match']);
+            }
+        }
     }
 }

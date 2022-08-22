@@ -9,7 +9,7 @@
             <h1 class="h4 mb-3 fw-normal text-center">Tambah Jenis Bahan Habis Pakai</h1>
                 <div class="col-sm-6 col-form-label col-form-label-sm text-center">
                     <form action="/BHP/material/unit" method="post">
-                        @csrf 
+                        @csrf
                         <div class="form-floating">
                             <input type="text" class="form-control form-control-sm mb-2 @error('name_unit') is-invalid @enderror" id="name_unit" name="name_unit" placeholder="Ariana Grande" required value="{{ old('name_unit') }}">
                             <label for="name_unit">Nama Jenis Bahan Habis Pakai</label>

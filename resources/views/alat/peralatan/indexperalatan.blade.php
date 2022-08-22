@@ -18,7 +18,7 @@
           <tr>
             <td class="col-1">
               <a type="button" class="btn btn-outline-primary" title="Tambah Mahasiswa" id="createalat">
-              Tambah Alat                 
+              Tambah Alat
             </a></td>
           </tr>
         </table>
@@ -42,7 +42,7 @@
                 <div class="mb-3">
                   <div class="row">
                     <div class="col-md-6">
-                                          
+
                       <div class="form-floating">
                         <input type="text" class="form-control form-control-sm mb-2 @error('nama_alat') is-invalid @enderror" id="nama_alat" name="nama_alat" required value="{{ old('nama_alat') }}">
                         <label for="nama_alat">Nama Alat</label>
@@ -82,7 +82,7 @@
                         </div>
                         @enderror
                       </div>
-                      
+
                       <div class="form-floating">
                         <input type="text" class="form-control form-control-sm mb-2 @error('barcode') is-invalid @enderror" id="barcode" name="barcode" placeholder="" required value="{{ old('barcode') }}">
                         <label for="barcode">Barcode</label>
@@ -102,7 +102,7 @@
                         <label for="spesifikasi">Spesifikasi</label>
                         <textarea class="form-control mb-2" class="form-control form-control-sm @error('spesifikasi') is-invalid @enderror" id="spesifikasi" rows="3" name="spesifikasi" required value="{{ old('spesifikasi') }}"></textarea>
                       </div>
-                      
+
                       <label for="jenis">Nama Jenis</label>
                       <select class="form-select mb-2" id="jenis_id" name="jenis_id" required value="{{ old('jenis_id') }}">
                       <option value="">Pilih Jenis Alat</option>
@@ -121,17 +121,17 @@
 
                       <label for="kondisi">Kondisi</label>
                       <select class="form-select mb-2 @error('kondisi') is-invalid @enderror" id="kondisi" name="kondisi" required value="{{ old('kondisi') }}">
-                        <option value="">Pilih Kondisi</option>  
+                        <option value="">Pilih Kondisi</option>
                         <option value="Baik">Baik</option>
                         <option value="Rusak">Rusak</option>
                         <option value="Dalam Perbaikan">Dalam Perbaikan</option>
                       </select>
-                                          
+
                     </div>
                   </div>
 
                 </div>
-              </form> 
+              </form>
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -143,7 +143,7 @@
       </div>
     </div>
 
-    <div class="container"> 
+    <div class="container">
       <div class="col-12 table-responsive mt-1">
         <table class="table table-bordered table-striped" id="alat" width="100%">
           <thead>
@@ -161,26 +161,9 @@
       </div>
     </div>
 </main>
-<script type="text/javascript" language="javascript" src="https://code.jquery.com/jquery-3.5.1.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js" integrity="sha512-uto9mlQzrs59VwILcLiRYeLKPPbS/bT71da/OEBYEwcdNUk8jYIy+D176RYoop1Da+f9mvkYrmj5MCLZWEtQuA==" crossorigin="anonymous"referrerpolicy="no-referrer"></script>
-<script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
-<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
-<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/1.12.1/js/dataTables.bootstrap5.min.js"></script>
+@endsection
 
-<!-- SweetAlert2 -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/10.5.1/sweetalert2.min.css">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/10.5.1/sweetalert2.all.min.js"></script>
-
- {{-- button --}}
- <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/1.7.1/css/buttons.dataTables.min.css">
- <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.7.1/js/dataTables.buttons.min.js"></script>
- <script src="https://cdn.datatables.net/buttons/1.5.2/js/buttons.flash.min.js"></script>
- <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
- <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"></script>
- <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script>
- <script src="https://cdn.datatables.net/buttons/1.5.2/js/buttons.html5.min.js   "></script>
- <script src="https://cdn.datatables.net/buttons/1.2.2/js/buttons.print.min.js"></script>
-
+@section('footer')
 <script type="text/javascript">
     $(document).ready( function () {
       $.ajaxSetup({
@@ -222,7 +205,7 @@
       $("#saveBtn").click(function(e){
         e.preventDefault();
         $(this).html('Input');
-        
+
         $.ajax({
           data:$("#alatForm").serialize(),
           url: "{{ route('pendataanperalatan.store') }}",
@@ -255,7 +238,7 @@
       $("#updateBtn").click(function(e){
         e.preventDefault();
         $(this).html('Update');
-        var id = $("#id").val();  
+        var id = $("#id").val();
         var data = $("#alatForm").serialize();
         $.ajax({
           data : data,
@@ -274,7 +257,7 @@
           }
         });
       });
-    
+
       function printErrorMsg (msg) {
             $(".print-error-msg").find("ul").html('');
             $(".print-error-msg").css('display','block');

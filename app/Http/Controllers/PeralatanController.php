@@ -66,7 +66,7 @@ class PeralatanController extends Controller
             'barcode' => 'required|min:5',
             'nama_alat' => 'required',
             'jenis_id' => 'required',
-            'merk' => 'required',            
+            'merk' => 'required',
             'tipe' => 'required',
             'tahun_masuk' => 'required',
             'kondisi' => 'required',
@@ -124,7 +124,7 @@ class PeralatanController extends Controller
             'barcode' => 'required|min:5',
             'nama_alat' => 'required',
             'jenis_id' => 'required',
-            'merk' => 'required',            
+            'merk' => 'required',
             'tipe' => 'required',
             'tahun_masuk' => 'required',
             'kondisi' => 'required',
@@ -176,7 +176,7 @@ class PeralatanController extends Controller
             "date" => Carbon::parse()->isoFormat('LLLL'),
             "jeniss" => Jenis::all(),
             "lokasis" => Lokasi::all(),
-            "peralatans" => Peralatan::all()->datatables()->of($peralatans)
+            "peralatans" => datatables()->of($peralatans)
         ]);
     }
 

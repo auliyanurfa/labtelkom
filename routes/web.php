@@ -29,83 +29,82 @@ use App\Http\Controllers\AktivitasController;
 |
 */
 
-Route::get('/', function () {
-    return view('index', [
-        "title" => "Index",
-        'active' => "Index"
-    ]);
-})->middleware('auth');
-
-Route::get('/BHP/dashboard', [DashboardController::class, 'show'])->middleware('auth');
-
 Route::get('/login', [LoginController::class, 'index'])->name('login')->middleware('guest');
 Route::post('/login', [LoginController::class, 'authenticate']);
 Route::post('/logout', [LoginController::class, 'logout']);
 
-// aktiviatas pemasukan
-Route::get('/BHP/laporanpemasukan', [BHPPemasukanController::class, 'laporan'])->middleware('auth');
-Route::get('/BHP/laporanpemasukan/cetak', [BHPPemasukanController::class, 'cetaklaporan'])->middleware('auth');
-Route::get('/BHP/laporanpemasukan/search', [BHPPemasukanController::class, 'search'])->middleware('auth');
-Route::resource('/BHP/aktivitaspemasukan', BHPPemasukanController::class)->middleware('auth');
+Route::group(['middleware' => 'auth'], function(){
 
-// aktivitas pengeluaran
-Route::get('/BHP/aktivitaspengeluaran/barcode', [BHPPengeluaranController::class, 'autofill'])->middleware('auth');
-Route::get('/BHP/aktivitaspengeluaran/read', [BHPPengeluaranController::class, 'read'])->middleware('auth');
-Route::get('/BHP/laporanpengeluaran', [BHPPengeluaranController::class, 'laporan'])->middleware('auth');
-Route::get('/BHP/laporanpengeluaran/cetak', [BHPPengeluaranController::class, 'cetaklaporan'])->middleware('auth');
-Route::resource('/BHP/aktivitaspengeluaran', BHPPengeluaranController::class)->middleware('auth');
+    Route::get('/', function () {
+        return view('index', [
+            "title" => "Index",
+            'active' => "Index"
+        ]);
+    });
 
+    Route::get('/BHP/dashboard', [DashboardController::class, 'show']);
+    // aktiviatas pemasukan
+    Route::get('/BHP/laporanpemasukan', [BHPPemasukanController::class, 'laporan']);
+    Route::get('/BHP/laporanpemasukan/cetak', [BHPPemasukanController::class, 'cetaklaporan']);
+    Route::get('/BHP/laporanpemasukan/search', [BHPPemasukanController::class, 'search']);
+    Route::resource('/BHP/aktivitaspemasukan', BHPPemasukanController::class);
 
-Route::get('/BHP/stok', [StokController::class, 'index'])->middleware('auth');
-Route::get('/BHP/stok/cetak', [StokController::class, 'cetak_pdf'])->middleware('auth');
+    // aktivitas pengeluaran
+    Route::get('/BHP/aktivitaspengeluaran/barcode', [BHPPengeluaranController::class, 'autofill']);
+    Route::get('/BHP/aktivitaspengeluaran/read', [BHPPengeluaranController::class, 'read']);
+    Route::get('/BHP/laporanpengeluaran', [BHPPengeluaranController::class, 'laporan']);
+    Route::get('/BHP/laporanpengeluaran/cetak', [BHPPengeluaranController::class, 'cetaklaporan']);
+    Route::resource('/BHP/aktivitaspengeluaran', BHPPengeluaranController::class);
 
-Route::resource('/BHP/akun', AccountController::class)->middleware('auth');
+    Route::get('/search/mahasiswa', [AktivitasController::class, 'searchMahasiswa'])->name('aktivitas.search.mahasiswa');
+    Route::get('/search/alat', [AktivitasController::class, 'searchAlat'])->name('aktivitas.search.alat');
 
-// hak akses untuk admin
-Route::group(['middleware' => 'admin'], function(){
-    Route::resource('/BHP/material', MaterialController::class)->middleware('auth');
-    Route::resource('/BHP/materials', CetakBarcodeController::class)->middleware('auth');
-    Route::resource('/BHP/material/unit', UnitController::class)->middleware('auth');
-    Route::resource('/BHP/user', UsersController::class)->middleware('auth');
-    Route::resource('/BHP/dataBHP', BHPController::class)->middleware('auth');
+    Route::get('/BHP/stok', [StokController::class, 'index']);
+    Route::get('/BHP/stok/cetak', [StokController::class, 'cetak_pdf']);
+
+    Route::resource('/BHP/akun', AccountController::class);
+
+    /////////////PERALATAN//////////////////
+    Route::get('/alat/dashboard', function () {
+        return view('alat.dashboard', [
+            "title" => "Dashboard",
+            'active' => "dashboard"
+        ]);
+    });
+    Route::get('/alat/peminjaman', function () {
+        return view('alat.peminjaman', [
+            "title" => "Peminjaman"
+        ]);
+    });
+
+    Route::get('/alat/pengembalian', function () {
+        return view('alat.pengembalian', [
+            "title" => "Pengembalian"
+        ]);
+    });
+
+    Route::get('/alat/laporanpeminjaman', function () {
+        return view('alat.laporanpeminjaman', [
+            "title" => "LaporanPeminjaman"
+        ]);
+    });
+
+    Route::get('/alat/datamahasiswa', [MahasiswaController::class, 'datamahasiswa']);
+    Route::get('/alat/dataperalatan', [PeralatanController::class, 'dataperalatan']);
 });
 
 
+// hak akses untuk admin
+Route::group(['middleware' => ['admin', 'auth']], function(){
+    Route::resource('/BHP/material', MaterialController::class);
+    Route::resource('/BHP/materials', CetakBarcodeController::class);
+    Route::resource('/BHP/material/unit', UnitController::class);
+    Route::resource('/BHP/user', UsersController::class);
+    Route::resource('/BHP/dataBHP', BHPController::class);
 
-
-/////////////PERALATAN//////////////////
-Route::get('/alat/dashboard', function () {
-    return view('alat.dashboard', [
-        "title" => "Dashboard",
-        'active' => "dashboard"
-    ]);
-})->middleware('auth');
-Route::get('/alat/peminjaman', function () {
-    return view('alat.peminjaman', [
-        "title" => "Peminjaman"
-    ]);
-})->middleware('auth');
-
-Route::get('/alat/pengembalian', function () {
-    return view('alat.pengembalian', [
-        "title" => "Pengembalian"
-    ]);
-})->middleware('auth');
-
-Route::get('/alat/laporanpeminjaman', function () {
-    return view('alat.laporanpeminjaman', [
-        "title" => "LaporanPeminjaman"
-    ]);
-})->middleware('auth');
-
-Route::get('/alat/datamahasiswa', [MahasiswaController::class, 'datamahasiswa'])->middleware('auth');
-Route::get('/alat/dataperalatan', [PeralatanController::class, 'dataperalatan'])->middleware('auth');
-
-
-Route::group(['middleware' => 'admin'], function(){
-    Route::resource('/alat/pendataanmahasiswa', MahasiswaController::class)->middleware('auth');
-    Route::resource('/alat/pendataanperalatan', PeralatanController::class)->middleware('auth');;
-    Route::resource('/alat/pendataanjenis', JenisController::class)->middleware('auth');
-    Route::resource('/alat/pendataanlokasi', LokasiController::class)->middleware('auth');
-    Route::resource('/alat/peminjamandanpengembalian', AktivitasController::class)->middleware('auth');
+    Route::resource('/alat/pendataanmahasiswa', MahasiswaController::class);
+    Route::resource('/alat/pendataanperalatan', PeralatanController::class);
+    Route::resource('/alat/pendataanjenis', JenisController::class);
+    Route::resource('/alat/pendataanlokasi', LokasiController::class);
+    Route::resource('/alat/peminjamandanpengembalian', AktivitasController::class);
 });

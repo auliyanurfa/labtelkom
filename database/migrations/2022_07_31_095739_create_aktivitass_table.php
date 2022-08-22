@@ -18,9 +18,9 @@ return new class extends Migration
             $table->foreignId('mahasiswa_id');
             $table->foreignId('peralatan_id');
             $table->date('tgl_pinjam');
-            $table->date('tgl_kembali');
+            $table->date('tgl_kembali')->nullable();
             $table->enum('status', ['pinjam', 'kembali']);
-            $table->timestamps();        
+            $table->timestamps();
         });
     }
 

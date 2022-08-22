@@ -13,7 +13,7 @@
       <div class="card-body">
         <!-- Button trigger modal -->
         <a href="javascript:void(0)" class="btn btn-primary" id="createPemasukan">Scan</a>
-        
+
         <!-- Modal -->
         <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
           <div class="modal-dialog">
@@ -37,12 +37,12 @@
                     {{-- stok masuk --}}
                       <label for="Stok" class="form-label"></label>
                       <input type="text" class="form-control @error('stok_masuk') is-invalid @enderror" id="stok_masuk" name="stok_masuk"placeholder="Stok Masuk" required>
-                    {{-- satuan --}}  
+                    {{-- satuan --}}
                       <label for="Stok" class="form-label"></label>
                       <input type="text" class="form-control @error('satuan') is-invalid @enderror" id="satuan" name="satuan"placeholder="satuan" required readonly='true'>
-                      
+
                   </div>
-                </form> 
+                </form>
               </div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -75,26 +75,8 @@
         </div>
       </div>
     </main>
-
-    <script type="text/javascript" language="javascript" src="https://code.jquery.com/jquery-3.5.1.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js" integrity="sha512-uto9mlQzrs59VwILcLiRYeLKPPbS/bT71da/OEBYEwcdNUk8jYIy+D176RYoop1Da+f9mvkYrmj5MCLZWEtQuA==" crossorigin="anonymous"referrerpolicy="no-referrer"></script>
-    <script type="text/javascript" language="javascript" src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
-    <script type="text/javascript" language="javascript" src="https://cdn.datatables.net/1.12.1/js/dataTables.bootstrap5.min.js"></script>
-    
-    <!-- SweetAlert2 -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/10.5.1/sweetalert2.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/10.5.1/sweetalert2.all.min.js"></script>
-
-    {{-- button --}}
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/1.7.1/css/buttons.dataTables.min.css">
-    <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.7.1/js/dataTables.buttons.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/1.5.2/js/buttons.flash.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script>
-    <script src="https://cdn.datatables.net/buttons/1.5.2/js/buttons.html5.min.js   "></script>
-    <script src="https://cdn.datatables.net/buttons/1.2.2/js/buttons.print.min.js"></script>
-
+@endsection
+@section('footer')
     <script>
     $(document).ready( function () {
       $.ajaxSetup({
@@ -117,7 +99,7 @@
                         .prepend(
                             '<h3>Laporan Aktivitas BHP Lab Barat Politeknik Negeri Semarang</h3>'
                         );
- 
+
                     $(win.document.body).find( 'table' )
                         .addClass( 'compact' )
                         .css( 'font-size', '12px');
@@ -166,12 +148,12 @@
                 $('#stok').val(obj.stok);
                 $('#satuan').val(obj.satuan);
                 $('#barcode').attr('readonly', true);
-                }); 
+                });
                 response(resp);
              }
          });
         },
-        minLength: 2 
+        minLength: 2
       });
         $('#close').click(function(e){
           $('#barcode').attr('readonly', false);
@@ -179,7 +161,7 @@
       $("#saveBtn").click(function(e){
         e.preventDefault();
         $(this).html('Input');
-        
+
         $.ajax({
           data:$("#pemasukanForm").serialize(),
           url: "{{ route('aktivitaspemasukan.store') }}",
@@ -199,8 +181,7 @@
         });
       });
     });
-  
- </script> 
+
+ </script>
 @endsection
 
-    
