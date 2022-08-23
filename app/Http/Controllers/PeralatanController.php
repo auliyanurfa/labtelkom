@@ -28,7 +28,7 @@ class PeralatanController extends Controller
             ->addColumn('action', function($row){
                 $btn = '<a href="javascript:void(0)" data-id="'. $row->id .'" class="edit m-1"><i class="fa-solid fa-pen-to-square"></i></a>';
                 $btn .= '<a href="javascript:void(0)" data-id="'.$row->id.'" class="read m-1"><i class="bi bi-eye"></i></a>';
-                $btn .= '<a href="/alat/printbarcode/'.$row->id.'" data-id="'.$row->id.'" class="print m-1" ><i class="bi bi-printer-fill"></i></a>';
+                $btn .= '<a href="/alat/cetakbarcode/'.$row->id.'" data-id="'.$row->id.'" class="print m-1" ><i class="bi bi-printer-fill"></i></a>';
                 $btn .= '<a href="javascript:void(0)" data-id="'.$row->id.'"class="delete m-1"><i class="fa-solid fa-trash-can"></i></a>';
                 return $btn;
             })
@@ -167,17 +167,16 @@ class PeralatanController extends Controller
         ]);
     }
 
-    public function dataperalatan(Request $request)
-    {
+    public function dataperalatan(){
         $peralatans = Peralatan::with('jenis', 'lokasi');
+        if(request()->ajax()){
+            return datatables()->of($peralatans);
+        }
 
-        return view('alat.peralatan.laporanperalatan', [
-            "title" => "peralatan",
-            "date" => Carbon::parse()->isoFormat('LLLL'),
-            "jeniss" => Jenis::all(),
-            "lokasis" => Lokasi::all(),
-            "peralatans" => datatables()->of($peralatans)
+        return view ('alat.peralatan.dataperalatan',[
+            'title' => 'Data Peralatan',
+                        "date" =>Carbon::parse()->isoFormat('LLLL'),
         ]);
-    }
 
+    }
 }

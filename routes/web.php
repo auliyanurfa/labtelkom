@@ -17,6 +17,7 @@ use App\Http\Controllers\JenisController;
 use App\Http\Controllers\LokasiController;
 use App\Http\Controllers\PeralatanController;
 use App\Http\Controllers\AktivitasController;
+use App\Http\Controllers\DashboardAlatController;
 
 /*
 |--------------------------------------------------------------------------
@@ -65,32 +66,10 @@ Route::group(['middleware' => 'auth'], function(){
     Route::resource('/BHP/akun', AccountController::class);
 
     /////////////PERALATAN//////////////////
-    Route::get('/alat/dashboard', function () {
-        return view('alat.dashboard', [
-            "title" => "Dashboard",
-            'active' => "dashboard"
-        ]);
-    });
-    Route::get('/alat/peminjaman', function () {
-        return view('alat.peminjaman', [
-            "title" => "Peminjaman"
-        ]);
-    });
-
-    Route::get('/alat/pengembalian', function () {
-        return view('alat.pengembalian', [
-            "title" => "Pengembalian"
-        ]);
-    });
-
-    Route::get('/alat/laporanpeminjaman', function () {
-        return view('alat.laporanpeminjaman', [
-            "title" => "LaporanPeminjaman"
-        ]);
-    });
 
     Route::get('/alat/datamahasiswa', [MahasiswaController::class, 'datamahasiswa']);
     Route::get('/alat/dataperalatan', [PeralatanController::class, 'dataperalatan']);
+    Route::get('/alat/dashboard', [DashboardAlatController::class,'show']);
 });
 
 
@@ -104,6 +83,7 @@ Route::group(['middleware' => ['admin', 'auth']], function(){
 
     Route::resource('/alat/pendataanmahasiswa', MahasiswaController::class);
     Route::resource('/alat/pendataanperalatan', PeralatanController::class);
+    Route::resource('/alat/cetakbarcode', CetakBarcodeAlatController::class);
     Route::resource('/alat/pendataanjenis', JenisController::class);
     Route::resource('/alat/pendataanlokasi', LokasiController::class);
     Route::resource('/alat/peminjamandanpengembalian', AktivitasController::class);

@@ -3,73 +3,100 @@
 namespace App\Http\Controllers;
 use App\Models\Mahasiswa;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
+
 use PDF;
 
 
 class MahasiswaController extends Controller
 {
-  
-    public function index()
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index(Request $request)
     {
+        $mahasiswas = Mahasiswa::all();
+
+        if($request->ajax()){
+            $allData = datatables()->of($mahasiswas)
+            ->addIndexColumn()
+            ->addColumn('action', function($row){
+                $btn = '<a href="javascript:void(0)" data-id="'. $row->id .'" class="edit m-1"><i class="fa-solid fa-pen-to-square"></i></a>';
+                $btn .= '<a href="javascript:void(0)" data-id="'.$row->id.'"class="delete m-1"><i class="fa-solid fa-trash-can"></i></a>';
+                return $btn;
+            })
+            ->rawColumns(['action'])
+            ->make(true);
+            return $allData;
+        }
         return view('alat.mahasiswa.indexmahasiswa', [
             "title" => "Mahasiswa",
-            "mahasiswas" => Mahasiswa::latest()->filter(request(['search']))->paginate(15)
+            "date" => Carbon::parse()->isoFormat('LLLL'),
         ]);
     }
-
-    
-    public function create()
-    {
-        return view('alat.mahasiswa.createmahasiswa',[
-            "title" => "Mahasiswa",
-        ]);
-    }
-
-   
-    public function store(Request $request, Mahasiswa $mahasiswa)
-    {        
-            if($id_mahasiswa ==  $mahasiswa->id_mahasiswa ){
-                echo "<script type='text/javascript'>alert('Nomor Induk Mahassiwa sudah digunakan');</script>";
-                }
-            else{
-                $input = $request->all();
-                $request->validate([
-                    'id_mahasiswa' => 'required',            
-                    'nama_mahasiswa' => 'required',
-                    'no_hp_mahasiswa' => 'required',
-                ]);
-                Mahasiswa::create($input);
-            return redirect('/alat/pendataanmahasiswa')->with('success', 'Data Mahasiswa Berhasil Ditambahkan!'); 
-    }
-}
 
     /**
- * Get the error messages for the defined validation rules.
- *
- * @return array
- */
-
-    
-    public function show($id)
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create()
     {
-        $mahasiswa = Mahasiswa::find($id);
-        return view('alat.mahasiswa.showmahasiswa',[
-            'mahasiswa' => $mahasiswa,
-            'title' => 'Mahasiswa',
-            'active' => 'Mahasiswa',
-            'mahasiswas' => Mahasiswa::where('id', $mahasiswa->id_mahasiswa)->get(),
+        //
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(Request $request)
+    {
+        $validatedData = $request->validate([
+            'id_mahasiswa' => 'required|min:5',
+            'nama_mahasiswa' => 'required',
+            'no_hp_mahasiswa' => 'required|max:15',
+        ]);
+
+        $create = Mahasiswa::create($validatedData);
+        if($create !== 0){
+            $success = true;
+            $message = "Data berhasil ditambahkan!";
+        }else{
+            $success= true;
+            $message = "Failed!";
+        }
+        return response()->json([
+            'success' => $success,
+            'message' => $message,
         ]);
     }
 
-
-    public function edit(Mahasiswa $mahasiswa)
+    /**
+     * Display the specified resource.
+     *
+     * @param  \App\Models\Mahasiswa  $mahasiswa
+     * @return \Illuminate\Http\Response
+     */
+    public function show($id)
     {
+        $mahasiswas = Mahasiswa::find($id);
+        return response()->json($mahasiswas);
+    }
 
-        return view('alat.mahasiswa.editmahasiswa', [
-            'title' => 'Mahasiswa',
-            'mahasiswa' => $mahasiswa,
-            'mahasiswas' => Mahasiswa::all(),
-        ]);
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  \App\Models\Mahasiswa  $mahasiswa
+     * @return \Illuminate\Http\Response
+     */
+    public function edit($id)
+    {
+        $mahasiswas = Mahasiswa::find($id);
+        return response()->json($mahasiswas);
     }
 
     /**
@@ -79,32 +106,62 @@ class MahasiswaController extends Controller
      * @param  \App\Models\Mahasiswa  $mahasiswa
      * @return \Illuminate\Http\Response
      */
-  
-    public function update(Request $request, Mahasiswa $mahasiswa)
+    public function update($id)
     {
-        $validatedData=$request->validate([
-            'id_mahasiswa' => 'required',            
+        $validatedData = request()->validate([
+            'id_mahasiswa' => 'required|min:5',
             'nama_mahasiswa' => 'required',
-            'no_hp_mahasiswa' => 'required',    
-        ]);   
+            'no_hp_mahasiswa' => 'required|max:15',
+        ]);
 
-        Mahasiswa::where('id_mahasiswa', $mahasiswa->id_mahasiswa)->update($validatedData);
-        return redirect('/alat/pendataanmahasiswa')->with('success', 'Data Mahasiswa Berhasil Diubah!');  
+        $update = Mahasiswa::find($id)->update($validatedData);
+        if($update == 1){
+            $success = true;
+            $message = "Data Alat berhasil diubah!";
+        }else{
+            $success= true;
+            $message = "Failed!";
+        }
+        return response()->json([
+            'success' => $success,
+            'message' => $message,
+        ]);
+
     }
 
-   
-    public function destroy($id_mahasiswa)
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  \App\Models\Mahasiswa  $mahasiswa
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy($id)
     {
-        Mahasiswa::destroy($id_mahasiswa);
-        return redirect('/alat/pendataanmahasiswa')->with('success', 'Data Mahasiswa Berhasil Dihapus!');  
+        $destroy = Mahasiswa::destroy($id);
+        if($destroy == 1){
+            $success = true;
+            $message = "Data Alat berhasil dihapus!";
+        }else{
+            $success= true;
+            $message = "Failed!";
+        }
+        return response()->json([
+            'success' => $success,
+            'message' => $message,
+        ]);
     }
 
-    public function datamahasiswa()
-    {
-        return view('alat.mahasiswa.datamahasiswa', [
-        "title" => "Data Mahasiswa",
-        "mahasiswas" => Mahasiswa::latest()->filter(request(['search']))->paginate(15)
-    ]);
+    public function datamahasiswa(){
+        $mahasiswas = Mahasiswa::all();
+        if(request()->ajax()){
+            return datatables()->of($mahasiswas);
+        }
+
+        return view ('alat.mahasiswa.datamahasiswa',[
+            'title' => 'Data Mahasiswa',
+                        "date" =>Carbon::parse()->isoFormat('LLLL'),
+        ]);
+
     }
 
 }

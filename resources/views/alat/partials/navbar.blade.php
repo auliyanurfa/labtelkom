@@ -95,7 +95,7 @@
               <button type="submit" class="btn btn-outline-danger">
                 <i class="bi bi-box-arrow-right"></i> Keluar
               </button>
-        </form>        
+        </form>
         @else()
         <li class="nav-item">
           <a class="nav-link {{($title === "Index") ? 'active' : '' }}" aria-current="page" href="/">
@@ -146,8 +146,8 @@
             <button type="submit" class="btn btn-outline-danger">
               <i class="bi bi-box-arrow-right"></i> Keluar
             </button>
-      </form> 
-      @endif()  
+      </form>
+      @endif()
       </div>
     </nav>
 

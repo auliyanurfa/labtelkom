@@ -12,45 +12,76 @@
       </div>
     </div>
 
-      <div class="row">
-        <div>
-          <table class="mb-4">
-            <tr>
-              <td class="col-1 mb-3"><a href="{{ url('/alat/cetakdatamahasiswa') }}" type="button" class="btn btn-outline-primary title="Tambah Mahasiswa">  
-                <i aria-hidden="true"></i> Ekspor                      
-              </a></td>
-              <td>
-                <form action="/alat/pendataanmahasiswa" class="d-flex mx-auto col-8 mb-0">
-                  <input class="form-control me-1" type="text" placeholder="Cari berdasarkan nama / NIM" aria-label="Search" name="search" value="{{ request('search') }}">
-                  <button class="btn btn-outline-primary" type="submit">Cari</button>
-                </form>
-              </td>
-            </tr>
-          </table>
-      </div>  
+      <div class="container">
+    <div class="col-12 table-responsive mt-1">
+      <table class="table table-bordered table-striped" id="mahasiswa" width="100%">
+        <thead>
+          <tr>
+            <th scope="col">No</th>
+            <th scope="col">Nomor Induk Mahasiswa</th>
+            <th scope="col">Nama Mahasiswa</th>
+            <th scope="col">Nomor HP Mahasiswa</th>
+          </tr>
+        </thead>
+        <tbody>
 
-  <div class="table-responsive">
-    <table class="table table-bordered table-striped table-sm">
-      <thead>
-        <tr>
-          <th scope="col">No.</th>
-          <th scope="col">NIM Mahasiswa</th>
-          <th scope="col">Nama Mahasiswa</th>
-          <th scope="col">Nomor HP Mahasiswa</th>
-        </tr>
-      </thead>
-      <tbody>
-        @foreach($mahasiswas as $siswa)
-        <tr>
-          <td>{{ $loop->iteration }}</td>
-          <td>{!! DNS1D::getBarcodeSVG($siswa->id_mahasiswa, "C39") !!}</td>
-          <td>{{ $siswa->nama_mahasiswa }}</td>
-          <td>{{ $siswa->no_hp_mahasiswa }}</td>
-        </tr>
-        @endforeach
-      </tbody>
-    </table>
+        </tbody>
+      </table>
+    </div>
   </div>
-  {{ $mahasiswas->links() }}
+</main>
 @endsection
+
+@section('footer')
+<script>
+    $(document).ready( function () {
+      $.ajaxSetup({
+      headers: {
+      'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      }
+      });
+      var table = $('#mahasiswa').DataTable({
+      "lengthMenu": [
+        [10, 25, 50, -1],
+        [10, 25, 50, "All"]
+      ],
+      dom: 'lBfrtip',
+            buttons: [
+            'excel',
+          { extend: 'print',
+                customize: function ( win ) {
+                    $(win.document.body)
+                        .css( 'text-align', 'center' )
+                        .prepend(
+                            '<h3><br>Laporan Data Mahasiswa Peminjam Peralatan Praktikum<br>Laboratorium Barat Politeknik Negeri Semarang</h3>'
+                        );
+
+                    $(win.document.body).find( 'table' )
+                        .addClass( 'compact' )
+                        .css( 'font-size', '12px');
+                }
+              }
+           ],
+      processing: true,
+      serverSide: true,
+      ajax: "{{ route('pendataanmahasiswa.index') }}",
+      columns: [
+      { "data": null,
+        "class": "align-top",
+        "orderable": false,
+        "searchable": false,
+        "render": function (data, type, row, meta) {
+          return meta.row + meta.settings._iDisplayStart + 1;
+        }
+      },
+      { data: 'id_mahasiswa', name: 'id_mahasiswa' },
+      { data: 'nama_mahasiswa', name: 'nama_mahasiswa' },
+      { data: 'no_hp_mahasiswa', name: 'no_hp_mahasiswa' },
+      ],
+      order: [[3, 'desc']]
+      });
+    });
+
+    </script>
+    @endsection
 
