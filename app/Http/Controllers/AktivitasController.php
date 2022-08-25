@@ -36,8 +36,8 @@ class AktivitasController extends Controller
             })
             ->addColumn('action', function($row){
                 // $btn .= '<a href="javascript:void(0)" data-id="'.$row->id.'"class="update m-1"><i class="fa-solid fa-trash-can"></i></a>';
-                $btn = '<a href="javascript:void(0)" data-id="'. $row->id .'" class="edit m-1"><i class="fa-solid fa-pen-to-square"></i></a>';
-                $btn .= '<a href="javascript:void(0)" data-id="'.$row->id.'"class="delete m-1"><i class="fa-solid fa-trash-can"></i></a>';
+                $btn = $row->tgl_kembali !== null ? '' : '<a href="javascript:void(0)" data-url="'.route('peminjamandanpengembalian.edit', $row->id).'" data-update="'.route('peminjamandanpengembalian.update', $row->id).'" data-id="'. $row->id .'" class="edit m-1"><i class="fa-solid fa-pen-to-square"></i></a>';
+                // $btn .= '<a href="javascript:void(0)" data-id="'.$row->id.'"class="delete m-1"><i class="fa-solid fa-trash-can"></i></a>';
                 return $btn;
             })
             ->rawColumns(['action'])
@@ -81,19 +81,29 @@ class AktivitasController extends Controller
             'barcode' => 'required',
             'nama_alat' => 'required',
             'id_mahasiswa' => 'required',
-            'nama_mahasiswa' => 'required'
+            'nama_mahasiswa' => 'required',
+            'kondisi' => 'nullable'
         ]);
 
         $mahasiswa = Mahasiswa::where('id_mahasiswa', $request->id_mahasiswa)->first();
 
         $peralatanRaw = Peralatan::where('barcode', $request->barcode);
         $singlePeralatan = $peralatanRaw->first();
+
+        if($singlePeralatan->jumlah_alat == 0){
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Stok Tidak Tersedia',
+            ]);
+        }
+
         $peralatan = $peralatanRaw->decrement('jumlah_alat', 1);
 
         $aktivitass = Aktivitas::create([
             'peralatan_id' => $singlePeralatan->id,
             'mahasiswa_id' => $mahasiswa->id,
-            'tgl_pinjam' => date('Y-m-d H:i:s'),
+            'tgl_pinjam' => Carbon::now(),
             'status' => 'pinjam'
         ]);
 
@@ -135,11 +145,8 @@ class AktivitasController extends Controller
      */
     public function edit(Aktivitas $aktivitas, $id)
     {
-        $data = Aktivitas::findOrFail($id);
-        return view('peminjamandanpengembalian.update', [
-            compact('data'),
-            'title' => 'Aktivitas',
-        ]);
+        $data = Aktivitas::with('peralatan', 'mahasiswa')->whereId($id)->first();
+        return response()->json($data);
     }
 
     /**
@@ -151,17 +158,32 @@ class AktivitasController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $aktivitass = Aktivitas::find($id);
+        $request->validate([
+            'barcode' => 'required'
+        ]);
+        $aktivitass = Aktivitas::whereId($id);
 
         $aktivitass->update([
-                'status' => 'kembali'
-                ]);
-
-        $peralatan = Peralatan::where('barcode', $request->barcode)->update([
-            'jml_alat' => $request->jml_alat -1,
+            'tgl_kembali' => Carbon::now()->format('Y-m-d H:i:s'),
+            'status' => 'kembali',
+            'kondisi' => $request->kondisi !== '' ? $request->kondisi : null
         ]);
 
-        return redirect('/alat/peminjamandanpengembalian')->with('success', 'Terima Kasih Peralatan Sudah Dikembalikan!');
+        $peralatan = Peralatan::where('barcode', $request->barcode)->increment('jumlah_alat', 1);
+
+        if($aktivitass !==0 && $peralatan !==0){
+            $success = true;
+            $message = "Data berhasil masuk!";
+        } else{
+            $success = false;
+            $message = "Failed";
+        }
+        // Bhppemasukan::Create($rules);
+
+        return response()->json([
+            'success' => $success,
+            'message' => $message,
+        ]);
     }
 
     /**

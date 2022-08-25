@@ -57,15 +57,20 @@
                                     @enderror
                                     {{-- nama mahasiswa --}}
                                     <label for="disabledTextInput3" class="form-label">Nama Mahasiswa</label>
-                                    <input type="text" class="form-control @error('nama_mahasiswa') is-invalid @enderror"
+                                    <input type="text" class="form-control mb-2 @error('nama_mahasiswa') is-invalid @enderror"
                                         id="nama_mahasiswa" name="nama_mahasiswa"placeholder="Nama Mahasiswa" required
                                         readonly='true'>
+                                    <label for="kondisi" class="form-label">Kondisi</label>
+                                    <input type="text" class="form-control @error('kondisi') is-invalid @enderror"
+                                        id="kondisi" name="kondisi" placeholder="Kondisi Alat" disabled
+                                        >
                                 </div>
                             </form>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                             <button type="submit" class="btn btn-primary" id="saveBtn" disabled value="create">Input</button>
+                            <button type="submit" class="btn btn-success" data-id="" id="updateBtn" value="update">Kembalikan</button>
                         </div>
                     </div>
                 </div>
@@ -108,9 +113,12 @@
                     type: 'GET',
                     dataType: 'json',
                     success: function (data) {
+                        var mahasiswa_name = $('#nama_mahasiswa').val()
                         if(data.success){
                             $('#nama_alat').val(data.msg.nama_alat)
-                            $('#saveBtn').prop('disabled', false)
+                            if(mahasiswa_name !== '' && mahasiswa_name !== 'Not Found!'){
+                                $('#saveBtn').prop('disabled', false)
+                            }
                         } else {
                             $('#nama_alat').val('Not Found!')
                             $('#saveBtn').prop('disabled', true)
@@ -128,9 +136,12 @@
                     type: 'GET',
                     dataType: 'json',
                     success: function (data) {
-                        console.log(data);
+                        var peralatan_name = $('#nama_alat').val()
                         if(data.success){
                             $('#nama_mahasiswa').val(data.msg.nama_mahasiswa)
+                            if(peralatan_name !== '' && peralatan_name !== 'Not Found!'){
+                                $('#saveBtn').prop('disabled', false)
+                            }
                             $('#saveBtn').prop('disabled', false)
                         } else {
                             $('#nama_mahasiswa').val('Not Found!')
@@ -190,55 +201,60 @@
             $("#createPinjam").click(function() {
                 $("#exampleModalLabel").html('Tambah Pinjam');
                 $("#pinjamForm").trigger('reset');
+                $("#saveBtn").show();
+                $("#updateBtn").hide();
                 $("#exampleModal").modal('show');
+                $("#kondisi").prop('disabled', true);
                 $("#barcode").attr('autofocus', 'true');
                 $("#id_mahasiswa").attr('autofocus', 'true');
+
+
+                $("#barcode").prop('disabled', false);
+                $("#id_mahasiswa").prop('disabled', false);
+
+                $("#barcode").val('');
+                $("#id_mahasiswa").val('');
+                $("#nama_alat").val('');
+                $("#kondisi").val('');
+                $("#nama_mahasiswa").val('');
             });
-
-            // $("#barcode").autocomplete({
-            //     source: function(request, response) {
-            //         $.ajax({
-            //             url: "{{ url('/alat/peminjamandanpengembalian/create') }}",
-            //             data: {
-            //                 term1: request.term
-            //             },
-            //             dataType: "json",
-            //             success: function(data) {
-            //                 var resp = $.map(data, function(obj) {
-            //                     $('#nama_alat').val(obj.nama_alat);
-            //                     $('#barcode').attr('readonly', true);
-            //                 });
-            //                 response(resp);
-            //             }
-            //         });
-            //     },
-            //     minLength: 2
-            // });
-
-            // $("#id_mahasiswa").autocomplete({
-            //     source: function(request, response) {
-            //         $.ajax({
-            //             url: "{{ url('/alat/peminjamandanpengembalian/create') }}",
-            //             data: {
-            //                 term2: request.term
-            //             },
-            //             dataType: "json",
-            //             success: function(data) {
-            //                 var resp = $.map(data, function(obj) {
-            //                     $('#nama_mahasiswa').val(obj.nama_mahasiswa);
-            //                     $('#id_mahasiswa').attr('readonly', true);
-            //                 });
-            //                 response(resp);
-            //             }
-            //         });
-            //     },
-            //     minLength: 2
-            // });
 
             $('#close').click(function(e) {
                 $('#barcode').attr('readonly', false);
                 $('#id_mahasiswa').attr('readonly', false);
             });
+
+            $("#updateBtn").click(function(e){
+                e.preventDefault();
+                var urlUpdate = $(this).data("update");
+                var _barcode = $('input[name="barcode"]').val();
+                var _kondisi = $('input[name="kondisi"]').val();
+                var _token = $('input[name="_token"]').val();
+                $.ajax({
+                    url: urlUpdate,
+                    data: {
+                        barcode: _barcode,
+                        kondisi: _kondisi,
+                        _token: _token,
+                        _method: 'put'
+                    },
+                    type: "POST",
+                    dataType: 'json',
+                    success: function(data) {
+                        $('#exampleModal').modal('hide');
+                        if (data.success == true) {
+                            swal.fire("Done!", data.message, "success");
+                        } else {
+                            swal.fire("error!", data.message, "error");
+                        }
+                        table.draw();
+                    },
+                    error: function(data) {
+                        $(".print-error-msg").css('display', 'block');
+                        $("#error").html(data.responseJSON.errors.barcode);
+                    }
+                })
+            })
 
             $("#saveBtn").click(function(e) {
                 e.preventDefault();
@@ -251,6 +267,7 @@
                 var _token = $('input[name="_token"]').val();
 
                 console.log( $("#pinjamForm").serialize());
+
                 $.ajax({
                     data: {
                         barcode: _barcode,
@@ -325,17 +342,27 @@
             });
 
             $('body').on('click', '.edit', function() {
-                var id = $(this).data("id");
-                $.get("{{ route('pendataanperalatan.index') }}" + '/' + id + '/edit', function(data) {
-                    $("#exampleModalLabel").html('Ubah Alat');
+                var url = $(this).data("url");
+                var update = $(this).data("update");
+                $.get(url, function(data) {
+                    console.log(data)
+                    $("#exampleModalLabel").html('Kembalikan');
                     $('#exampleModal').modal('show');
                     $("#code39").hide();
                     $("#saveBtn").hide();
                     $("#updateBtn").show();
-                    $("#id").val(id);
-                    $("#nama_alat").val(data.nama_alat);
-                    $("#id_lokasi").val(data.id_lokasi);
-                    $("#barcode").val(data.barcode);
+                    $("#kondisi").val('');
+                    $("#updateBtn").attr('data-update', update);
+                    $("#nama_alat").val(data.peralatan.nama_alat);
+                    $("#barcode").val(data.peralatan.barcode);
+                    $("#nama_mahasiswa").val(data.mahasiswa.nama_mahasiswa);
+                    $("#id_mahasiswa").val(data.mahasiswa.id_mahasiswa);
+
+                    $("#barcode").prop('disabled', true);
+                    $("#id_mahasiswa").prop('disabled', true);
+                    $("#kondisi").prop('disabled', false);
+
+
                 })
             });
         });

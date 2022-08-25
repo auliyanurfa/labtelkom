@@ -52,7 +52,7 @@ class JenisController extends Controller
     {
         $validatedData = $request->validate([
             'nama_jenis' => 'required',
-            'kode_jenis' => 'required|max:4',
+            'kode_jenis' => 'required|unique:jeniss,kode_jenis|max:4',
         ]);
 
         $create = Jenis::create($validatedData);
@@ -104,7 +104,7 @@ class JenisController extends Controller
     {
         $validatedData = request()->validate([
             'nama_jenis' => 'required',
-            'kode_jenis' => 'required|max:4',
+            'kode_jenis' => 'required|unique:jeniss,kode_jenis,'.$id.'|max:4',
         ]);
         $update = Jenis::find($id)->update($validatedData);
         if($update == 1){
@@ -142,5 +142,5 @@ class JenisController extends Controller
             'message' => $message,
         ]);
     }
-    
+
 }

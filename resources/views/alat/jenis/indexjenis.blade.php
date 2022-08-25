@@ -175,7 +175,13 @@
               swal.fire("error!", data.message, "error");
             }
             table.draw();
-          }
+          },
+          error: function(data){
+            console.log(data);
+            $(".print-error-msg").css('display','block');
+            $("#error").html(data.responseJSON.errors.nama_jenis);
+            $("#error").html(data.responseJSON.errors.kode_jenis)
+            }
         });
       });
 

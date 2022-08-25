@@ -187,7 +187,8 @@
           dataType: 'json',
           success:function(data){
             $('#mahasiswaForm').trigger("reset");
-            $('#exampleModal').modal('hide');
+            $('#exampleModal').modal('hide')
+
             if(data.success == true){
               swal.fire("Done!", data.message, "success");
             } else{
@@ -227,8 +228,10 @@
       });
 
       $('body').on('click', '.edit', function(){
+        var url = $(this).data("url");
         var id = $(this).data("id");
-        $.get("{{ route('pendataanmahasiswa.index') }}"+'/'+id+'/edit', function(data){
+        $.get(url, function(data){
+            console.log(data);
           $("#exampleModalLabel").html('Ubah Mahasiswa');
           $('#exampleModal').modal('show');
           $("#saveBtn").hide();

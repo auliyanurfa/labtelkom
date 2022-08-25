@@ -53,7 +53,7 @@ class LokasiController extends Controller
         $validatedData = $request->validate([
             'lab' => 'required',
             'almari' => 'required',
-            'kode_lokasi' => 'required|max:3',
+            'kode_lokasi' => 'required|unique:lokasis,kode_lokasi|max:3',
         ]);
 
         $create = Lokasi::create($validatedData);
@@ -106,7 +106,7 @@ class LokasiController extends Controller
         $validatedData = request()->validate([
             'lab' => 'required',
             'almari' => 'required',
-            'kode_Lokasi' => 'required|max:3',
+            'kode_lokasi' => 'required|unique:lokasis,kode_lokasi,'.$id.'|max:3',
         ]);
         $update = Lokasi::find($id)->update($validatedData);
         if($update == 1){
@@ -144,5 +144,5 @@ class LokasiController extends Controller
             'message' => $message,
         ]);
     }
-    
+
 }

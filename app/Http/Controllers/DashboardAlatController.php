@@ -49,21 +49,23 @@ class DashboardAlatController extends Controller
     public function show(Peralatan $peralatans)
     {
 
-        return view('alat.dashboard', [
-            "title" => "Dashboard",
-            "active" => "dashboard",
-            "peralatans" => Peralatan::all(),
-            "baik_alat" => Peralatan::where([
-                'kondisi' => 'Baik'
-            ])->sum('kondisi'),
-            "rusak_alat" => Peralatan::where([
-                'kondisi' => 'Rusak'
-            ])->sum('kondisi'),
-            "dalamperbaikan_alat" => Peralatan::where([
-                'kondisi' => 'Dalam Perbaikan'
-            ])->sum('kondisi'),
-            "mahasiswas" => Mahasiswa::all()->sum('id'),
-        ]);
+        $title = "Dashboard";
+        $active = "dashboard";
+        $peralatans = Peralatan::all();
+        $baik_alat = Peralatan::whereKondisi('Baik')->sum('kondisi');
+        $rusak_alat = Peralatan::whereKondisi('Rusak')->sum('kondisi');
+        $dalamperbaikan_alat = Peralatan::whereKondisi('Dalam perbaikan')->sum('kondisi');
+        $mahasiswas = Mahasiswa::sum('id');
+
+        return view('alat.dashboard', compact(
+            'title',
+            'active',
+            'peralatans',
+            'baik_alat',
+            'rusak_alat',
+            'dalamperbaikan_alat',
+            'mahasiswas'
+        ));
     }
 
     /**

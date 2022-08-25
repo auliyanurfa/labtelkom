@@ -194,7 +194,8 @@
                 e.preventDefault();
                 $(this).html('Update');
                 var id = $("#id").val();
-                var data = $("#lokasiform").serialize();
+                var data = $("#lokasiForm").serialize();
+                console.log('blok', data)
                 $.ajax({
                     data: data,
                     url: "{{ route('pendataanlokasi.index') }}" + '/' + id,
@@ -209,6 +210,13 @@
                             swal.fire("error!", data.message, "error");
                         }
                         table.draw();
+                    },
+                    error: function(data) {
+                        console.log(data);
+                        $(".print-error-msg").css('display', 'block');
+                        $("#error").html(data.responseJSON.errors.lab);
+                        $("#error").html(data.responseJSON.errors.almari);
+                        $("#error").html(data.responseJSON.errors.kode_lokasi)
                     }
                 });
             });

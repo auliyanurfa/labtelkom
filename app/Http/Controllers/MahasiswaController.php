@@ -23,7 +23,7 @@ class MahasiswaController extends Controller
             $allData = datatables()->of($mahasiswas)
             ->addIndexColumn()
             ->addColumn('action', function($row){
-                $btn = '<a href="javascript:void(0)" data-id="'. $row->id .'" class="edit m-1"><i class="fa-solid fa-pen-to-square"></i></a>';
+                $btn = '<a href="javascript:void(0)" data-url="'.route('pendataanmahasiswa.edit', $row->id).'" data-id="'. $row->id .'" class="edit m-1"><i class="fa-solid fa-pen-to-square"></i></a>';
                 $btn .= '<a href="javascript:void(0)" data-id="'.$row->id.'"class="delete m-1"><i class="fa-solid fa-trash-can"></i></a>';
                 return $btn;
             })
@@ -95,7 +95,8 @@ class MahasiswaController extends Controller
      */
     public function edit($id)
     {
-        $mahasiswas = Mahasiswa::find($id);
+
+        $mahasiswas = Mahasiswa::whereId($id)->first();
         return response()->json($mahasiswas);
     }
 
@@ -114,7 +115,7 @@ class MahasiswaController extends Controller
             'no_hp_mahasiswa' => 'required|max:15',
         ]);
 
-        $update = Mahasiswa::find($id)->update($validatedData);
+        $update = Mahasiswa::whereId($id)->update($validatedData);
         if($update == 1){
             $success = true;
             $message = "Data Alat berhasil diubah!";
@@ -137,7 +138,7 @@ class MahasiswaController extends Controller
      */
     public function destroy($id)
     {
-        $destroy = Mahasiswa::destroy($id);
+        $destroy = Mahasiswa::whereId($id)->delete();
         if($destroy == 1){
             $success = true;
             $message = "Data Alat berhasil dihapus!";
