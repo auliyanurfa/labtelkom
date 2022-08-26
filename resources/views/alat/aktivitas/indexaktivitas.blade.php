@@ -60,10 +60,13 @@
                                     <input type="text" class="form-control mb-2 @error('nama_mahasiswa') is-invalid @enderror"
                                         id="nama_mahasiswa" name="nama_mahasiswa"placeholder="Nama Mahasiswa" required
                                         readonly='true'>
-                                    <label for="kondisi" class="form-label">Kondisi</label>
-                                    <input type="text" class="form-control @error('kondisi') is-invalid @enderror"
-                                        id="kondisi" name="kondisi" placeholder="Kondisi Alat" disabled
-                                        >
+                                    <label for="kondisi">Kondisi</label>
+                                    <select class="form-select mb-2 @error('kondisi') is-invalid @enderror" id="kondisi" name="kondisi" required value="{{ old('kondisi') }}">
+                                        <option value="">Pilih Kondisi</option>
+                                        <option value="Baik">Baik</option>
+                                        <option value="Rusak">Rusak</option>
+                                        <option value="Dalam Perbaikan">Dalam Perbaikan</option>
+                                    </select>
                                 </div>
                             </form>
                         </div>
@@ -116,6 +119,7 @@
                         var mahasiswa_name = $('#nama_mahasiswa').val()
                         if(data.success){
                             $('#nama_alat').val(data.msg.nama_alat)
+                            $('#kondisi').val(data.msg.kondisi)
                             if(mahasiswa_name !== '' && mahasiswa_name !== 'Not Found!'){
                                 $('#saveBtn').prop('disabled', false)
                             }
@@ -211,11 +215,10 @@
 
                 $("#barcode").prop('disabled', false);
                 $("#id_mahasiswa").prop('disabled', false);
-
+                $("#kondisi").val('');
                 $("#barcode").val('');
                 $("#id_mahasiswa").val('');
                 $("#nama_alat").val('');
-                $("#kondisi").val('');
                 $("#nama_mahasiswa").val('');
             });
 
@@ -228,7 +231,7 @@
                 e.preventDefault();
                 var urlUpdate = $(this).data("update");
                 var _barcode = $('input[name="barcode"]').val();
-                var _kondisi = $('input[name="kondisi"]').val();
+                var _kondisi = $('select[name="kondisi"]').val();
                 var _token = $('input[name="_token"]').val();
                 $.ajax({
                     url: urlUpdate,
@@ -351,7 +354,7 @@
                     $("#code39").hide();
                     $("#saveBtn").hide();
                     $("#updateBtn").show();
-                    $("#kondisi").val('');
+                    $("#kondisi").val(data.peralatan.kondisi);
                     $("#updateBtn").attr('data-update', update);
                     $("#nama_alat").val(data.peralatan.nama_alat);
                     $("#barcode").val(data.peralatan.barcode);

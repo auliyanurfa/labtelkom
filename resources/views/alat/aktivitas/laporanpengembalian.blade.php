@@ -10,22 +10,23 @@
           </div>
         </div>
       </div>
-
+{{--
       <form class="d-flex col-8 mb-4">
        <button class="btn btn-outline-success col-2-mr-3 " type="submit">Export</button>
 
        <input class="form-control me-2 offset-sm-2" type="search" placeholder="Search" aria-label="Search">
         <button class="btn btn-outline-success" type="submit">Search</button>
-      </form>
+      </form> --}}
 
       <div class="container">
-          <div class="col-12">
-            <table class="table table-bordered table-striped table-hover">
+        <div class="col-12 table-responsive mt-1">
+            <table class="table table-bordered table-striped" id="pengembalian" style="width:100%">
               <thead>
                 <tr>
+                  <th scope="col">No</th>
                   <th scope="col">ID Mahasiswa</th>
                   <th scope="col">Nama</th>
-                  <th scope="col">Kelas</th>
+                  <th scope="col">No Hp</th>
                   <th scope="col">ID Barang</th>
                   <th scope="col">Barang Dipinjam</th>
                   <th scope="col">Kondisi Awal</th>
@@ -35,35 +36,8 @@
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <th scope="row">1</th>
-                  <td>12adcb</td>
-                  <td>Kelas TE4B</td>
-                  <td>Kevin</td>
-                  <td>blablabla</td>
-                  <td>Tipe</td>
-                  <td>20</td>
-                  <td>100</td>
-                </tr>
               </tbody>
             </table>
-            <nav aria-label="Page navigation example">
-              <ul class="pagination">
-                <li class="page-item">
-                  <a class="page-link" href="#" aria-label="Previous">
-                    <span aria-hidden="true">&laquo;</span>
-                  </a>
-                </li>
-                <li class="page-item"><a class="page-link" href="#">1</a></li>
-                <li class="page-item"><a class="page-link" href="#">2</a></li>
-                <li class="page-item"><a class="page-link" href="#">3</a></li>
-                <li class="page-item">
-                  <a class="page-link" href="#" aria-label="Next">
-                    <span aria-hidden="true">&raquo;</span>
-                  </a>
-                </li>
-              </ul>
-            </nav>
           </div>
         </div>
     </main>
@@ -71,4 +45,90 @@
 </div>
 @endsection
 
-    
+@section('footer')
+    <script>
+        $(document).ready(function() {
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+            var table = $('#pengembalian').DataTable({
+                "lengthMenu": [
+                    [10, 25, 50, -1],
+                    [10, 25, 50, "All"]
+                ],
+                dom: 'lBfrtip',
+                buttons: [
+                    'excel',
+                    {
+                        extend: 'print',
+                        customize: function(win) {
+                            $(win.document.body)
+                                .css('text-align', 'center')
+                                .prepend(
+                                    '<h3><br>Laporan Data Peminjam Peralatan Praktikum<br>Laboratorium Barat Politeknik Negeri Semarang</h3>'
+                                );
+
+                            $(win.document.body).find('table')
+                                .addClass('compact')
+                                .css('font-size', '12px');
+                        }
+                    }
+                ],
+                processing: true,
+                serverSide: true,
+                ajax: "{{ route('report.kembali') }}",
+                columns: [{
+                        "data": null,
+                        "class": "align-top",
+                        "orderable": false,
+                        "searchable": false,
+                        "render": function(data, type, row, meta) {
+                            return meta.row + meta.settings._iDisplayStart + 1;
+                        }
+                    },
+                    {
+                        data: 'mahasiswa.id_mahasiswa',
+                        name: 'mahasiswa.id_mahasiswa'
+                    },
+                    {
+                        data: 'mahasiswa.nama_mahasiswa',
+                        name: 'mahasiswa.nama_mahasiswa'
+                    },
+                    {
+                        data: 'mahasiswa.no_hp_mahasiswa',
+                        name: 'mahasiswa.no_hp_mahasiswa'
+                    },
+                    {
+                        data: 'peralatan.barcode',
+                        name: 'peralatan.barcode'
+                    },
+                    {
+                        data: 'peralatan.nama_alat',
+                        name: 'peralatan.nama_alat'
+                    },
+                    {
+                        data: 'kondisi_awal',
+                        name: 'kondisi_awal'
+                    },
+                    {
+                        data: 'kondisi_akhir',
+                        name: 'kondisi_akhir'
+                    },
+                    {
+                        data: 'tgl_pinjam',
+                        name: 'tgl_pinjam'
+                    },
+                    {
+                        data: 'tgl_kembali',
+                        name: 'tgl_kembali'
+                    }
+                ],
+                order: [
+                    [3, 'desc']
+                ]
+            });
+        });
+    </script>
+@endsection

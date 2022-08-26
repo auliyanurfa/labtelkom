@@ -66,13 +66,13 @@
             Laporan
             </span>
             <li class="nav-item">
-              <a class="nav-link {{($title === "LaporanPeminjaman") ? 'active' : '' }}" href="/alat/laporanpeminjaman">
+              <a class="nav-link {{($title === "Laporan Peminjaman") ? 'active' : '' }}" href="/alat/laporanpeminjaman">
                 <i class="bi bi bi-download"></i>
                   Peminjaman
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link {{($title === "LaporanPengembalian") ? 'active' : '' }}" href="/alat/laporanpengembalian">
+              <a class="nav-link {{($title === "Laporan Pengembalian") ? 'active' : '' }}" href="/alat/laporanpengembalian">
                 <i class="bi bi bi-download"></i>
                   Pengembalian
               </a>

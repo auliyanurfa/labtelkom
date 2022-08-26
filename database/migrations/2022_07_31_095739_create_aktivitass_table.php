@@ -20,7 +20,8 @@ return new class extends Migration
             $table->string('tgl_pinjam');
             $table->string('tgl_kembali')->nullable();
             $table->enum('status', ['pinjam', 'kembali']);
-            $table->string('kondisi')->nullable();
+            $table->string('kondisi_awal');
+            $table->string('kondisi_akhir')->nullable();
             $table->timestamps();
         });
     }

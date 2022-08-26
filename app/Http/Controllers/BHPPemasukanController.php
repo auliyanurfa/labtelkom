@@ -31,12 +31,12 @@ class BHPPemasukanController extends Controller
             ->make(true);
         }
 
-        return view ('bahan.pemasukan',[
+        return view('bahan.pemasukan',[
             'title' => 'Pemasukan',
             "date" =>Carbon::parse()->isoFormat('LLLL'),
         ]);
     }
-    
+
     /**
      * Show the form for creating a new resource.
      *
@@ -58,12 +58,12 @@ class BHPPemasukanController extends Controller
      */
     public function store(Request $request)
     {
-        
-        $material = Material::where('barcode', $request->barcode)->update([ 
+
+        $material = Material::where('barcode', $request->barcode)->update([
             'stok' => $request->stok + $request->stok_masuk,
             'stok_masuk'=> $request->stok_masuk,
         ]);
-            
+
         $bhp = Bhppemasukan::Create([
             'name_material'=>$request->name_material,
             'barcode' => $request->barcode,
@@ -72,7 +72,7 @@ class BHPPemasukanController extends Controller
             'stok_awal'=> $request->stok,
             'satuan'=> $request->satuan,
         ]);
-        
+
         if($bhp !==0 && $material !==0){
             $success = true;
             $message = "Stok berhasil masuk!";
@@ -100,7 +100,7 @@ class BHPPemasukanController extends Controller
      */
     public function show(Material $material)
     {
-        // 
+        //
     }
 
     /**
@@ -123,7 +123,7 @@ class BHPPemasukanController extends Controller
      */
     public function update(Request $request, Material $material)
     {
-        // 
+        //
     }
 
     /**
@@ -152,6 +152,6 @@ class BHPPemasukanController extends Controller
             'title' => 'Laporan Pemasukan BHP',
                         "date" =>Carbon::parse()->isoFormat('LLLL'),
         ]);
-        
+
     }
 }

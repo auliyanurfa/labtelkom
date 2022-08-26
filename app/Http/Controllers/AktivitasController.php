@@ -82,7 +82,6 @@ class AktivitasController extends Controller
             'nama_alat' => 'required',
             'id_mahasiswa' => 'required',
             'nama_mahasiswa' => 'required',
-            'kondisi' => 'nullable'
         ]);
 
         $mahasiswa = Mahasiswa::where('id_mahasiswa', $request->id_mahasiswa)->first();
@@ -104,7 +103,8 @@ class AktivitasController extends Controller
             'peralatan_id' => $singlePeralatan->id,
             'mahasiswa_id' => $mahasiswa->id,
             'tgl_pinjam' => Carbon::now(),
-            'status' => 'pinjam'
+            'status' => 'pinjam',
+            'kondisi_awal' => $singlePeralatan->kondisi
         ]);
 
         if($aktivitass !==0 && $peralatan !==0){
@@ -159,17 +159,20 @@ class AktivitasController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'barcode' => 'required'
+            'barcode' => 'required',
+            'kondisi' => 'required'
         ]);
         $aktivitass = Aktivitas::whereId($id);
 
         $aktivitass->update([
             'tgl_kembali' => Carbon::now()->format('Y-m-d H:i:s'),
             'status' => 'kembali',
-            'kondisi' => $request->kondisi !== '' ? $request->kondisi : null
+            'kondisi_akhir' => $request->kondisi
         ]);
 
-        $peralatan = Peralatan::where('barcode', $request->barcode)->increment('jumlah_alat', 1);
+        $peralatanRaw = Peralatan::where('barcode', $request->barcode);
+        $peralatan = $peralatanRaw->increment('jumlah_alat', 1);
+        $peralatanRaw->update(['kondisi' => $request->kondisi]);
 
         if($aktivitass !==0 && $peralatan !==0){
             $success = true;
@@ -228,5 +231,35 @@ class AktivitasController extends Controller
                 return response()->json(['success' => false, 'msg' => 'Not Match']);
             }
         }
+    }
+
+    public function peminjaman(Request $request)
+    {
+        if($request->ajax()){
+            $aktivitas = Aktivitas::with('peralatan', 'mahasiswa')->select();
+            return datatables()->of($aktivitas)
+            ->addIndexColumn()
+            ->make(true);
+        }
+
+        return view('alat.aktivitas.laporanpeminjaman',[
+            'title' => 'Laporan Peminjaman',
+            "date" =>Carbon::parse()->isoFormat('LLLL')
+        ]);
+    }
+
+    public function pengembalian(Request $request)
+    {
+        if($request->ajax()){
+            $aktivitas = Aktivitas::with('peralatan', 'mahasiswa')->whereNotNull('tgl_kembali')->select();
+            return datatables()->of($aktivitas)
+            ->addIndexColumn()
+            ->make(true);
+        }
+
+        return view('alat.aktivitas.laporanpengembalian',[
+            'title' => 'Laporan Pengembalian',
+            "date" =>Carbon::parse()->isoFormat('LLLL')
+        ]);
     }
 }

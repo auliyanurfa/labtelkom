@@ -67,6 +67,8 @@ Route::group(['middleware' => 'auth'], function(){
 
     /////////////PERALATAN//////////////////
 
+    Route::get('/alat/laporanpeminjaman', [AktivitasController::class, 'peminjaman'])->name('report.pinjam');
+    Route::get('/alat/laporanpengembalian', [AktivitasController::class, 'pengembalian'])->name('report.kembali');
     Route::get('/alat/datamahasiswa', [MahasiswaController::class, 'datamahasiswa']);
     Route::get('/alat/dataperalatan', [PeralatanController::class, 'dataperalatan']);
     Route::get('/alat/dashboard', [DashboardAlatController::class,'show']);
@@ -83,7 +85,7 @@ Route::group(['middleware' => ['admin', 'auth']], function(){
 
     Route::resource('/alat/pendataanmahasiswa', MahasiswaController::class);
     Route::resource('/alat/pendataanperalatan', PeralatanController::class);
-    Route::resource('/alat/cetakbarcode', CetakBarcodeAlatController::class);
+    // Route::resource('/alat/cetakbarcode', CetakBarcodeAlatController::class);
     Route::resource('/alat/pendataanjenis', JenisController::class);
     Route::resource('/alat/pendataanlokasi', LokasiController::class);
     Route::resource('/alat/peminjamandanpengembalian', AktivitasController::class);
