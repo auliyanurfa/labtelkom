@@ -18,6 +18,7 @@ use App\Http\Controllers\LokasiController;
 use App\Http\Controllers\PeralatanController;
 use App\Http\Controllers\AktivitasController;
 use App\Http\Controllers\DashboardAlatController;
+use App\Http\Controllers\CetakBarcodeAlatController;
 
 /*
 |--------------------------------------------------------------------------
@@ -85,7 +86,7 @@ Route::group(['middleware' => ['admin', 'auth']], function(){
 
     Route::resource('/alat/pendataanmahasiswa', MahasiswaController::class);
     Route::resource('/alat/pendataanperalatan', PeralatanController::class);
-    // Route::resource('/alat/cetakbarcode', CetakBarcodeAlatController::class);
+    Route::resource('/alat/cetakbarcode', CetakBarcodeAlatController::class);
     Route::resource('/alat/pendataanjenis', JenisController::class);
     Route::resource('/alat/pendataanlokasi', LokasiController::class);
     Route::resource('/alat/peminjamandanpengembalian', AktivitasController::class);

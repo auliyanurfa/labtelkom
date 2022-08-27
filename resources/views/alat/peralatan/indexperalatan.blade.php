@@ -295,9 +295,9 @@
           $("#nama_alat").val(data.nama_alat);
           $("#merk").val(data.merk);
           $("#tipe").val(data.tipe);
-          $("#id_jenis").val(data.id_jenis);
+          $("#jenis_id").val(data.jenis_id);
           $("#spesifikasi").val(data.spesifikasi);
-          $("#id_lokasi").val(data.id_lokasi);
+          $("#lokasi_id").val(data.lokasi_id);
           $("#tahun_masuk").val(data.tahun_masuk);
           $("#kondisi").val(data.kondisi);
           $("#barcode").val(data.barcode);
@@ -320,9 +320,9 @@
           $("#nama_alat").val(data.nama_alat);
           $("#merk").val(data.merk);
           $("#tipe").val(data.tipe);
-          $("#id_jenis").val(data.id_jenis);
+          $("#jenis_id").val(data.jenis_id);
           $("#spesifikasi").val(data.spesifikasi);
-          $("#id_lokasi").val(data.id_lokasi);
+          $("#lokasi_id").val(data.lokasi_id);
           $("#tahun_masuk").val(data.tahun_masuk);
           $("#kondisi").val(data.kondisi);
           $("#barcode").val(data.barcode);

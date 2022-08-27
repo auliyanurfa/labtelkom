@@ -51,11 +51,13 @@ class DashboardAlatController extends Controller
 
         $title = "Dashboard";
         $active = "dashboard";
-        $peralatans = Peralatan::all();
-        $baik_alat = Peralatan::whereKondisi('Baik')->sum('kondisi');
-        $rusak_alat = Peralatan::whereKondisi('Rusak')->sum('kondisi');
-        $dalamperbaikan_alat = Peralatan::whereKondisi('Dalam perbaikan')->sum('kondisi');
-        $mahasiswas = Mahasiswa::sum('id');
+        $peralatans = Peralatan::count('id');
+        $mahasiswas = Mahasiswa::count('id');
+        $pinjam_alat = Aktivitas::wherestatus('pinjam')->sum('status');
+        $kembali_alat = Aktivitas::wherestatus('kembali')->sum('status');
+        $baik_alat = Peralatan::wherekondisi('Baik')->sum('kondisi');
+        $rusak_alat = Peralatan::wherekondisi('Rusak')->sum('kondisi');
+        $dalamperbaikan_alat = Peralatan::wherekondisi('Dalam perbaikan')->sum('kondisi');
 
         return view('alat.dashboard', compact(
             'title',
@@ -64,7 +66,9 @@ class DashboardAlatController extends Controller
             'baik_alat',
             'rusak_alat',
             'dalamperbaikan_alat',
-            'mahasiswas'
+            'mahasiswas',
+            'pinjam_alat',
+            'kembali_alat'
         ));
     }
 
