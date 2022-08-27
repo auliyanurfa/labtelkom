@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Aktivitas;
 use App\Models\Mahasiswa;
 use App\Models\Peralatan;
+use Carbon\Carbon;
 
 class DashboardAlatController extends Controller
 {
@@ -58,6 +59,24 @@ class DashboardAlatController extends Controller
         $baik_alat = Peralatan::wherekondisi('Baik')->sum('kondisi');
         $rusak_alat = Peralatan::wherekondisi('Rusak')->sum('kondisi');
         $dalamperbaikan_alat = Peralatan::wherekondisi('Dalam perbaikan')->sum('kondisi');
+        $jenis_alat = Peralatan::with('jenis')->get()->groupBy('jenis.nama_jenis');
+        $jumlahbyjenis = $jenis_alat->map(function($query){
+            return $query->count();
+        });
+
+        $dataPinjamByWeek = Aktivitas::whereStatus('pinjam')->get()->sortByDesc('tgl_pinjam')->groupBy(function($date) {
+            return Carbon::parse($date->tgl_pinjam)->format('W, M Y');
+        })->take(5)->reverse();
+        $dataKembaliByWeek = Aktivitas::whereStatus('kembali')->get()->sortByDesc('tgl_pinjam')->groupBy(function($date) {
+            return Carbon::parse($date->tgl_pinjam)->format('W, M Y');
+        })->take(5)->reverse();
+
+        $shortDataPinjamByWeek = $dataPinjamByWeek->map(function($query){
+            return $query->count();
+        });
+        $shortDataKembaliByWeek = $dataKembaliByWeek->map(function($query){
+            return $query->count();
+        });
 
         return view('alat.dashboard', compact(
             'title',
@@ -67,6 +86,9 @@ class DashboardAlatController extends Controller
             'rusak_alat',
             'dalamperbaikan_alat',
             'mahasiswas',
+            'shortDataPinjamByWeek',
+            'shortDataKembaliByWeek',
+            'jumlahbyjenis',
             'pinjam_alat',
             'kembali_alat'
         ));
