@@ -67,5 +67,6 @@ class DatabaseSeeder extends Seeder
         $this->call(JenisSeeder::class);
         $this->call(LokasiSeeder::class);
         $this->call(PeralatanSeeder::class);
+        $this->call(AktivitasSeeder::class);
     }
 }
