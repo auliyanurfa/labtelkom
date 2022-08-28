@@ -86,7 +86,7 @@ Route::group(['middleware' => ['admin', 'auth']], function(){
 
     Route::resource('/alat/pendataanmahasiswa', MahasiswaController::class);
     Route::resource('/alat/pendataanperalatan', PeralatanController::class);
-    Route::resource('/alat/cetakbarcode', CetakBarcodeAlatController::class);
+    Route::resource('/alat/cetakbarcode', CetakBarcodeAlatController::class)->parameter('cetakbarcode', 'peralatan');
     Route::resource('/alat/pendataanjenis', JenisController::class);
     Route::resource('/alat/pendataanlokasi', LokasiController::class);
     Route::resource('/alat/peminjamandanpengembalian', AktivitasController::class);
