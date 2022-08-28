@@ -191,7 +191,7 @@
                         type: 'pie'
                     },
                     title: {
-                        text: 'Jumlah Peralatan Per Tahun'
+                        text: 'Jumlah Peralatan Berdasarkan Kondisi'
                     },
                     plotOptions: {
                         pie: {
@@ -199,7 +199,7 @@
                             cursor: 'pointer',
                             dataLabels: {
                                 enabled: true,
-                                format: '<b>{point.y}</b> Alat, Tahun {point.name}',
+                                format: '<b>{point.y}</b> {point.name}',
                                 distance: -50,
                             }
                         }
@@ -207,11 +207,11 @@
                     series: [{
                         name: 'Total',
                         data: [
-                            @foreach ($alatPerTahun as $key => $value)
-                            {
-                                name: "{{$key}}",
-                                y: {{ number_format($value, 0, ",", ".") }},
-                            },
+                            @foreach ($jumlahbyjenisNewest as $key => $value)
+                                {
+                                    name: "{{ $key }}",
+                                    y: {{ $value }},
+                                },
                             @endforeach
                         ]
                     }]

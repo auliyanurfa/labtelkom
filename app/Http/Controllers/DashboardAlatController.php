@@ -63,6 +63,10 @@ class DashboardAlatController extends Controller
         $jumlahbyjenis = $jenis_alat->map(function($query){
             return $query->count();
         });
+        $jenis_alatNewest = Peralatan::with('jenis')->whereYear('created_at', date('Y'))->get()->groupBy('jenis.nama_jenis');
+        $jumlahbyjenisNewest = $jenis_alatNewest->map(function($query){
+            return $query->count();
+        });
 
         $dataPinjamByWeek = Aktivitas::whereStatus('pinjam')->get()->sortByDesc('tgl_pinjam')->groupBy(function($date) {
             return Carbon::parse($date->tgl_pinjam)->format('W, M Y');
@@ -95,6 +99,7 @@ class DashboardAlatController extends Controller
             'shortDataPinjamByWeek',
             'shortDataKembaliByWeek',
             'jumlahbyjenis',
+            'jumlahbyjenisNewest',
             'pinjam_alat',
             'kembali_alat',
             'alatPerTahun'

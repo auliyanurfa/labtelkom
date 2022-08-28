@@ -16,6 +16,7 @@ class PeralatanFactory extends Factory
      */
     public function definition()
     {
+        $date = $this->faker->dateTimeBetween('-2 years', 'now');
         return [
             'barcode' => $this->faker->bothify('????????########'),
             'nama_alat' => $this->faker->words(3, true) . ' ' . $this->faker->lexify('??????'),
@@ -26,7 +27,8 @@ class PeralatanFactory extends Factory
             'tahun_masuk' => $this->faker->year('now'),
             'jumlah_alat' => rand(1, 200),
             'kondisi' => $this->faker->randomElement(['Baik', 'Rusak', 'Dalam Perbaikan']),
-            'lokasi_id' => 1
+            'lokasi_id' => 1,
+            'created_at' => $date
         ];
     }
 }
