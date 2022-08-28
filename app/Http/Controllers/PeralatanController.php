@@ -63,7 +63,7 @@ class PeralatanController extends Controller
     public function store(Request $request)
     {
         $validatedData = $request->validate([
-            'barcode' => 'required|min:5',
+            'barcode' => 'required|unique:peralatans,barcode|min:5',
             'nama_alat' => 'required',
             'jenis_id' => 'required',
             'merk' => 'required',
