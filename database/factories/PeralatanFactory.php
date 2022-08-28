@@ -25,7 +25,7 @@ class PeralatanFactory extends Factory
             'tipe' => $this->faker->words(2, true)  . ' ' . $this->faker->lexify('????'),
             'spesifikasi' => $this->faker->paragraph(1, false),
             'tahun_masuk' => $date->format('Y'),
-            'jumlah_alat' => rand(1, 200),
+            'jumlah_alat' => 1,
             'kondisi' => $this->faker->randomElement(['Baik', 'Rusak', 'Dalam Perbaikan']),
             'lokasi_id' => 1,
         ];
