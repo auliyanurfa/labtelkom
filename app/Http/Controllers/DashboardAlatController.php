@@ -63,7 +63,7 @@ class DashboardAlatController extends Controller
         $jumlahbyjenis = $jenis_alat->map(function($query){
             return $query->count();
         });
-        $jenis_alatNewest = Peralatan::with('jenis')->whereYear('created_at', date('Y'))->get()->groupBy('jenis.nama_jenis');
+        $jenis_alatNewest = Peralatan::with('jenis')->where('tahun_masuk', date('Y'))->get()->groupBy('jenis.nama_jenis');
         $jumlahbyjenisNewest = $jenis_alatNewest->map(function($query){
             return $query->count();
         });
@@ -82,7 +82,7 @@ class DashboardAlatController extends Controller
             return $query->count();
         });
 
-        $alatPerTahun = Peralatan::get()->sortByDesc('created_at')->groupBy(function($date) {
+        $alatPerTahun = Peralatan::get()->sortByDesc('tahun_masuk')->groupBy(function($date) {
             return Carbon::parse($date->tgl_pinjam)->format('Y');
         })->map(function($query){
             return $query->sum('jumlah_alat');
