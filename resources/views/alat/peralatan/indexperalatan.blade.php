@@ -268,7 +268,7 @@
 
       $('body').on('click', '.delete', function(){
         var id = $(this).data("id");
-        confirm('Anda yakin ingin menghapus data ini?');
+        if(confirm('Anda yakin ingin menghapus data ini?')){
         $.ajax({
             type: "DELETE",
             url : "{{ route('pendataanperalatan.store') }}"+'/'+id,
@@ -284,6 +284,7 @@
                 console.log('Error',data);
             }
         });
+    }
       });
       $('body').on('click', '.read', function(){
         var id = $(this).data("id");

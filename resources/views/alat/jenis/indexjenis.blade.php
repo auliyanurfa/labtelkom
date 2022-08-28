@@ -187,7 +187,7 @@
 
       $('body').on('click', '.delete', function(){
         var id = $(this).data("id");
-        confirm('Apakah anda yakin ingin menghapus data ini?');
+        if(confirm('Apakah anda yakin ingin menghapus data ini?')){
         $.ajax({
             type: "DELETE",
             url : "{{ route('pendataanjenis.store') }}"+'/'+id,
@@ -203,6 +203,7 @@
                 console.log('Error',data);
             }
         });
+    }
     });
     $('body').on('click', '.edit', function(){
         var id = $(this).data("id");

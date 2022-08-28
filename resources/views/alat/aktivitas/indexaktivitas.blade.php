@@ -306,7 +306,7 @@
 
             $('body').on('click', '.delete', function() {
                 var id = $(this).data("id");
-                confirm('Anda yakin ingin menghapus data ini?');
+                if(confirm('Anda yakin ingin menghapus data ini?')){
                 $.ajax({
                     type: "DELETE",
                     url: "{{ route('peminjamandanpengembalian.store') }}" + '/' + id,
@@ -322,11 +322,12 @@
                         console.log('Error', data);
                     }
                 });
+            }
             });
 
             $('body').on('click', '.delete', function() {
                 var id = $(this).data("id");
-                confirm('Anda yakin data ini sudah kembali?');
+                if(confirm('Anda yakin data ini sudah kembali?')){
                 $.ajax({
                     type: "UPDATE",
                     url: "{{ route('peminjamandanpengembalian.store') }}" + '/' + id,
@@ -342,6 +343,7 @@
                         console.log('Error', data);
                     }
                 });
+            }
             });
 
             $('body').on('click', '.edit', function() {

@@ -300,7 +300,7 @@
 
       $('body').on('click', '.delete', function(){
         var id = $(this).data("id");
-        confirm('apakah anda yakin ingin menghapusnya ?');
+        if(confirm('apakah anda yakin ingin menghapusnya ?')){
         $.ajax({
             type: "DELETE",
             url : "{{ route('dataBHP.store') }}"+'/'+id,
@@ -316,6 +316,7 @@
                 console.log('Error',data);
             }
         });
+    }
       });
       $('body').on('click', '.read', function(){
         var id = $(this).data("id");
