@@ -46,6 +46,9 @@
                 <div class="col-md-6 col-lg-6 col-12 py-4">
                     <div id="chart3"></div>
                 </div>
+                <div class="col-md-6 col-lg-6 col-12 py-4">
+                    <div id="chart4"></div>
+                </div>
             </div>
         @endsection
 
@@ -178,6 +181,39 @@
                             @endforeach
                         ]
 
+                    }]
+                });
+                Highcharts.chart('chart4', {
+                    chart: {
+                        plotBackgroundColor: null,
+                        plotBorderWidth: null,
+                        plotShadow: false,
+                        type: 'pie'
+                    },
+                    title: {
+                        text: 'Jumlah Peralatan Per Tahun'
+                    },
+                    plotOptions: {
+                        pie: {
+                            allowPointSelect: true,
+                            cursor: 'pointer',
+                            dataLabels: {
+                                enabled: true,
+                                format: '<b>{point.y}</b> Alat, Tahun {point.name}',
+                                distance: -50,
+                            }
+                        }
+                    },
+                    series: [{
+                        name: 'Total',
+                        data: [
+                            @foreach ($alatPerTahun as $key => $value)
+                            {
+                                name: "{{$key}}",
+                                y: {{ number_format($value, 0, ",", ".") }},
+                            },
+                            @endforeach
+                        ]
                     }]
                 });
             </script>

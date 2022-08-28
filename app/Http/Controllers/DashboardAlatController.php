@@ -78,6 +78,12 @@ class DashboardAlatController extends Controller
             return $query->count();
         });
 
+        $alatPerTahun = Peralatan::get()->sortByDesc('created_at')->groupBy(function($date) {
+            return Carbon::parse($date->tgl_pinjam)->format('Y');
+        })->map(function($query){
+            return $query->sum('jumlah_alat');
+        });
+
         return view('alat.dashboard', compact(
             'title',
             'active',
@@ -90,7 +96,8 @@ class DashboardAlatController extends Controller
             'shortDataKembaliByWeek',
             'jumlahbyjenis',
             'pinjam_alat',
-            'kembali_alat'
+            'kembali_alat',
+            'alatPerTahun'
         ));
     }
 
