@@ -56,7 +56,7 @@ class MahasiswaController extends Controller
     public function store(Request $request)
     {
         $validatedData = $request->validate([
-            'id_mahasiswa' => 'required|min:5',
+            'id_mahasiswa' => 'required|unique:mahasiswas,id_mahasiswa|min:5',
             'nama_mahasiswa' => 'required',
             'no_hp_mahasiswa' => 'required|max:15',
         ]);
