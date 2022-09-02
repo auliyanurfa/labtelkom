@@ -54,11 +54,11 @@ class DashboardAlatController extends Controller
         $active = "dashboard";
         $peralatans = Peralatan::count('id');
         $mahasiswas = Mahasiswa::count('id');
-        $pinjam_alat = Aktivitas::wherestatus('pinjam')->sum('status');
-        $kembali_alat = Aktivitas::wherestatus('kembali')->sum('status');
-        $baik_alat = Peralatan::wherekondisi('Baik')->sum('kondisi');
-        $rusak_alat = Peralatan::wherekondisi('Rusak')->sum('kondisi');
-        $dalamperbaikan_alat = Peralatan::wherekondisi('Dalam perbaikan')->sum('kondisi');
+        $pinjam_alat = Aktivitas::whereStatus('pinjam')->count();
+        $kembali_alat = Aktivitas::whereStatus('kembali')->count();
+        $baik_alat = Peralatan::whereKondisi('Baik')->count();
+        $rusak_alat = Peralatan::whereKondisi('Rusak')->count();
+        $dalamperbaikan_alat = Peralatan::whereKondisi('Dalam perbaikan')->count();
         $jenis_alat = Peralatan::with('jenis')->get()->groupBy('jenis.nama_jenis');
         $jumlahbyjenis = $jenis_alat->map(function($query){
             return $query->count();
