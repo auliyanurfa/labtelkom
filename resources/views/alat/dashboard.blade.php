@@ -50,6 +50,17 @@
                     <div id="chart4"></div>
                 </div>
             </div>
+            <div class="row">
+                <div class="col-md-6 col-lg-6 col-12 py-4">
+                    <div id="chart5"></div>
+                </div>
+                <div class="col-md-6 col-lg-6 col-12 py-4">
+                    <div id="chart6"></div>
+                </div>
+                <div class="col-md-6 col-lg-6 col-12 py-4">
+                    <div id="chart7"></div>
+                </div>
+            </div>
         @endsection
 
         @section('footer')
@@ -102,7 +113,7 @@
                         type: 'pie'
                     },
                     title: {
-                        text: 'Jumlah Peralatan Berdasarkan Kondisi'
+                        text: 'Jumlah Peralatan Berdasarkan Jenis'
                     },
                     plotOptions: {
                         pie: {
@@ -191,7 +202,7 @@
                         type: 'pie'
                     },
                     title: {
-                        text: 'Jumlah Peralatan Berdasarkan Kondisi'
+                        text: 'Jumlah Peralatan Berdasarkan Jenis Tahun Terbaru'
                     },
                     plotOptions: {
                         pie: {
@@ -208,6 +219,105 @@
                         name: 'Total',
                         data: [
                             @foreach ($jumlahbyjenisNewest as $key => $value)
+                                {
+                                    name: "{{ $key }}",
+                                    y: {{ $value }},
+                                },
+                            @endforeach
+                        ]
+                    }]
+                });
+                Highcharts.chart('chart5', {
+                    chart: {
+                        plotBackgroundColor: null,
+                        plotBorderWidth: null,
+                        plotShadow: false,
+                        type: 'pie'
+                    },
+                    title: {
+                        text: 'Jumlah Peralatan Berdasarkan Kondisi Rusak'
+                    },
+                    plotOptions: {
+                        pie: {
+                            allowPointSelect: true,
+                            cursor: 'pointer',
+                            dataLabels: {
+                                enabled: true,
+                                format: '<b>{point.y}</b> {point.name}',
+                                distance: -50,
+                            }
+                        }
+                    },
+                    series: [{
+                        name: 'Total',
+                        data: [
+                            @foreach ($alatRusakAll as $key => $value)
+                                {
+                                    name: "{{ $key }}",
+                                    y: {{ $value }},
+                                },
+                            @endforeach
+                        ]
+                    }]
+                });
+                Highcharts.chart('chart6', {
+                    chart: {
+                        plotBackgroundColor: null,
+                        plotBorderWidth: null,
+                        plotShadow: false,
+                        type: 'pie'
+                    },
+                    title: {
+                        text: 'Jumlah Peralatan Berdasarkan Kondisi Baik'
+                    },
+                    plotOptions: {
+                        pie: {
+                            allowPointSelect: true,
+                            cursor: 'pointer',
+                            dataLabels: {
+                                enabled: true,
+                                format: '<b>{point.y}</b> {point.name}',
+                                distance: -50,
+                            }
+                        }
+                    },
+                    series: [{
+                        name: 'Total',
+                        data: [
+                            @foreach ($alatBaikAll as $key => $value)
+                                {
+                                    name: "{{ $key }}",
+                                    y: {{ $value }},
+                                },
+                            @endforeach
+                        ]
+                    }]
+                });
+                Highcharts.chart('chart7', {
+                    chart: {
+                        plotBackgroundColor: null,
+                        plotBorderWidth: null,
+                        plotShadow: false,
+                        type: 'pie'
+                    },
+                    title: {
+                        text: 'Jumlah Peralatan Berdasarkan Kondisi Dalam Perbaikan'
+                    },
+                    plotOptions: {
+                        pie: {
+                            allowPointSelect: true,
+                            cursor: 'pointer',
+                            dataLabels: {
+                                enabled: true,
+                                format: '<b>{point.y}</b> {point.name}',
+                                distance: -50,
+                            }
+                        }
+                    },
+                    series: [{
+                        name: 'Total',
+                        data: [
+                            @foreach ($alatDalamPerbaikanAll as $key => $value)
                                 {
                                     name: "{{ $key }}",
                                     y: {{ $value }},

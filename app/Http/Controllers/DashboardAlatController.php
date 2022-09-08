@@ -88,6 +88,16 @@ class DashboardAlatController extends Controller
             return $query->sum('jumlah_alat');
         });
 
+        $alatRusakAll = Peralatan::whereKondisi('Rusak')->get()->groupBy('nama_alat')->map(function($query){
+            return $query->count();
+        });
+        $alatBaikAll = Peralatan::whereKondisi('Baik')->get()->groupBy('nama_alat')->map(function($query){
+            return $query->count();
+        });
+        $alatDalamPerbaikanAll = Peralatan::whereKondisi('Dalam Perbaikan')->get()->groupBy('nama_alat')->map(function($query){
+            return $query->count();
+        });
+
         return view('alat.dashboard', compact(
             'title',
             'active',
@@ -102,7 +112,10 @@ class DashboardAlatController extends Controller
             'jumlahbyjenisNewest',
             'pinjam_alat',
             'kembali_alat',
-            'alatPerTahun'
+            'alatPerTahun',
+            'alatRusakAll',
+            'alatBaikAll',
+            'alatDalamPerbaikanAll'
         ));
     }
 
