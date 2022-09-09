@@ -130,7 +130,7 @@ class PeralatanController extends Controller
             'kondisi' => 'required',
             'lokasi_id' => 'required'
         ]);
-        $update = Peralatan::find($id)->update($validatedData);
+        $update = Peralatan::find($id)->update(array_merge($validatedData, ['spesifikasi' => request()->spesifikasi ?? '']));
         if($update == 1){
             $success = true;
             $message = "Data Alat berhasil diubah!";
